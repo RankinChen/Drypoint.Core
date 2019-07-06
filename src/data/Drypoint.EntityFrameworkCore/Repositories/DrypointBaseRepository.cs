@@ -1,7 +1,5 @@
 ﻿using Drypoint.EntityFrameworkCore.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Drypoint.Core.Common;
 
 namespace Drypoint.EntityFrameworkCore.EntityFrameworkCore.Repositories
 {

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Drypoint.Core;
-using Drypoint.Core.Configuration;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
+using Drypoint.Unity.Configuration;
+using Drypoint.Unity;
 
 namespace Drypoint.EntityFrameworkCore.EntityFrameworkCore
 {

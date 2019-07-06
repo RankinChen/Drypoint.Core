@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using Microsoft.Extensions.Configuration;
 using Drypoint.Extensions;
 
-namespace Drypoint.Core.Configuration
+namespace Drypoint.Unity.Configuration
 {
     public static class AppConfigurations
     {
@@ -27,8 +24,7 @@ namespace Drypoint.Core.Configuration
 
         private static IConfigurationRoot BuildConfiguration(string path, string environmentName = null, bool addUserSecrets = false)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(path)
+            var builder = new ConfigurationBuilder().SetBasePath(path)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
             if (!string.IsNullOrWhiteSpace(environmentName))

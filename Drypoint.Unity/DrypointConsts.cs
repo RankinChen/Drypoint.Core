@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Drypoint.Core
+namespace Drypoint.Unity
 {
     public class DrypointConsts
     { 

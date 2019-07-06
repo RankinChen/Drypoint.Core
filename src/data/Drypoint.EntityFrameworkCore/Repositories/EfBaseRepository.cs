@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Drypoint.Core.Common;
 
 namespace Drypoint.EntityFrameworkCore.Repositories
 {
@@ -101,12 +102,12 @@ namespace Drypoint.EntityFrameworkCore.Repositories
 
         public override TEntity Insert(TEntity entity)
         {
-            return Table.Add(entity);
+            return Table.Add(entity).Entity;
         }
 
         public override Task<TEntity> InsertAsync(TEntity entity)
         {
-            return Task.FromResult(Table.Add(entity));
+            return Task.FromResult(Table.Add(entity).Entity);
         }
 
         public override TPrimaryKey InsertAndGetId(TEntity entity)

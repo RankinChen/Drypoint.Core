@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Drypoint.Core
+namespace Drypoint.Unity
 {
     /// <summary>
     /// 此类用于查找源码根目录以及Web工程目录
