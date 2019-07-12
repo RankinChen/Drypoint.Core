@@ -45,6 +45,9 @@ namespace Drypoint.Host.Startup
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //DI
+            services.AddServiceRegister();
+
             //MVC
             services.AddMvc(options =>
             {
@@ -70,7 +73,7 @@ namespace Drypoint.Host.Startup
                     builder
                         .WithOrigins(
                             // App:CorsOrigins in appsettings.json can contain more than one address separated by comma.
-                            _appConfiguration["CorsOrigins"]
+                            _appConfiguration["App:CorsOrigins"]
                                 .Split(",", StringSplitOptions.RemoveEmptyEntries)
                                 .Select(o => o.RemovePostFix("/"))
                                 .ToArray()
@@ -84,16 +87,16 @@ namespace Drypoint.Host.Startup
             IdentityRegistrar.Register(services);
             //AuthConfigurer.Configure(services, _appConfiguration);
 
-            if (bool.Parse(_appConfiguration["App:HttpsRedirection"] ?? "false"))
-            {
-                //建议开启，以在浏览器显示安全图标
-                //设置https重定向端口
-                services.AddHttpsRedirection(options =>
-                {
-                    options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
-                    options.HttpsPort = 443;
-                });
-            }
+            //if (bool.Parse(_appConfiguration["App:HttpsRedirection"] ?? "false"))
+            //{
+            //    //建议开启，以在浏览器显示安全图标
+            //    //设置https重定向端口
+            //    services.AddHttpsRedirection(options =>
+            //    {
+            //        options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
+            //        options.HttpsPort = 443;
+            //    });
+            //}
 
             //是否启用HTTP严格传输安全协议(HSTS)
             if (bool.Parse(_appConfiguration["App:UseHsts"] ?? "false"))

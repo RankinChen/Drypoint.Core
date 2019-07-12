@@ -9,7 +9,7 @@ namespace Drypoint.Unity
         /// <summary>
         /// 数据库连接字符串
         /// </summary>
-        public const string ConnectionStringName = "ConnectionStrings";
+        public const string ConnectionStringName = "Default";
 
         /// <summary>
         /// 接口前缀

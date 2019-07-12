@@ -11,7 +11,7 @@ using Drypoint.Core.Configuration;
 namespace Drypoint.Core.Authorization.Users
 {
     [Table("DrypointUserBase")]
-    public abstract class UserBase : FullAuditedEntity<long>, IPassivable
+    public class UserBase : FullAuditedEntity<long>, IPassivable
     {
         [StringLength(64)]
         public virtual string AuthenticationSource { get; set; }

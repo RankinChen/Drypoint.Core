@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\unity\Drypoint.Exception\Drypoint.Exception.csproj" />
     <ProjectReference Include="..\..\unity\Drypoint.Extensions\Drypoint.Extensions.csproj" />
     <ProjectReference Include="..\Drypoint.Core.Custom\Drypoint.Core.Custom.csproj" />
   </ItemGroup>

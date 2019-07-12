@@ -1,7 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
+	  <UserSecretsId>Drypoint-Unity-236460AF-0B31-40AB-961E-924575A1CCD9</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

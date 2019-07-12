@@ -16,6 +16,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Redis" Version="1.1.5" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.2.0" />
@@ -23,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\core\Drypoint.Core\Drypoint.Core.csproj" />
+    <ProjectReference Include="..\..\application\Drypoint.Application\Drypoint.Application.csproj" />
     <ProjectReference Include="..\..\unity\Drypoint.Extensions\Drypoint.Extensions.csproj" />
     <ProjectReference Include="..\..\unity\Drypoint.Unity\Drypoint.Unity.csproj" />
     <ProjectReference Include="..\Drypoint.Host.Core\Drypoint.Host.Core.csproj" />

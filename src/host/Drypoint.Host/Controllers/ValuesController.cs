@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Drypoint.EntityFrameworkCore.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Drypoint.Host.Controllers
@@ -14,7 +15,11 @@ namespace Drypoint.Host.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            return new string[] { "value1", "value2" };
+            DrypointDbContextFactory df = new DrypointDbContextFactory();
+            df.CreateDbContext(new string[5]);
+            
+
+                return new string[] { "value1", "value2" };
         }
 
         // GET api/values/5
