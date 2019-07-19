@@ -7,7 +7,7 @@ namespace Drypoint.Application.Services.Dto.Interface
     /// <summary>
     /// 跳过多少条
     /// </summary>
-    public interface IPagedBaseRequestL:ILimitedBaseRequest
+    public interface IPagedBaseRequest:ILimitedBaseRequest
     {
         /// <summary>
         /// 跳过的行数

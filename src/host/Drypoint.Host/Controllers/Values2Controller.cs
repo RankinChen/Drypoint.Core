@@ -8,9 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Drypoint.Host.Controllers
 {
-    [ApiVersion("1")]
-    [ApiVersion("2", Deprecated = false)] //区分版本标记 可以叠加连个属性 在对应不同的版本中出现 Deprecated为true 将显示删除线
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiExplorerSettings(GroupName = "admin")]
+    [Route("api/[controller]")]
     [ApiController]
     public class Values2Controller : ControllerBase
     {

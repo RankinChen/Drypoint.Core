@@ -14,18 +14,6 @@ namespace Drypoint.Host.Core.Configuration
     {
         public static void AddCustomSwaggerGen(this IServiceCollection services, IConfiguration configuration, IHostingEnvironment hostingEnvironment)
         {
-            services.AddApiVersioning(options =>
-            {
-                options.DefaultApiVersion = new ApiVersion(1,0);
-                options.AssumeDefaultVersionWhenUnspecified = true;
-                options.ApiVersionReader = new UrlSegmentApiVersionReader();
-            })
-            .AddVersionedApiExplorer(options =>
-            {
-                options.GroupNameFormat = "VVV";
-                options.SubstituteApiVersionInUrl = true;
-            }); ;
-
             //以下二选一
             //注册OpenAPI
             //services.AddOpenApiDocument();
@@ -52,12 +40,12 @@ namespace Drypoint.Host.Core.Configuration
                     };
                 };
                 config.DocumentName = "App";
-                config.ApiGroupNames = new[] { "1" };
+                config.ApiGroupNames = new[] { "app" };
             })
             .AddSwaggerDocument(document =>
             {
                 document.DocumentName = "Admin";
-                document.ApiGroupNames = new[] { "2", "3" };
+                document.ApiGroupNames = new[] { "admin" };
             });
         }
 
@@ -67,13 +55,14 @@ namespace Drypoint.Host.Core.Configuration
         public static void UseCustomSwaggerUI(this IApplicationBuilder app, IConfiguration configuration)
         {
             app.UseOpenApi();
-
             //以下两种 二选一
             app.UseSwaggerUi3(config =>
-            {
+             {
 
-            });
+             });
             //app.UseReDoc();
+
+
         }
     }
 }

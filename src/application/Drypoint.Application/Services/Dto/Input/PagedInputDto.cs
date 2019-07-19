@@ -10,7 +10,7 @@ namespace Drypoint.Application.Services.Dto.Input
     /// <summary>
     /// 
     /// </summary>
-    public class PagedInputDto : IPagedBaseRequestL
+    public class PagedInputDto : IPagedBaseRequest
     {
         /// <summary>
         /// 

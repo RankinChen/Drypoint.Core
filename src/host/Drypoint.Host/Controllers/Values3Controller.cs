@@ -8,9 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Drypoint.Host.Controllers
 {
-    [ApiVersion("1")]
-    [ApiVersion("3")]
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiExplorerSettings(GroupName = "app")]
+    [Route("api/[controller]")]
     [ApiController]
     public class Values3Controller : ControllerBase
     {

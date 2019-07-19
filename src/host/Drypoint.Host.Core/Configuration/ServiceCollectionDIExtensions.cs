@@ -25,7 +25,7 @@ namespace Drypoint.Host.Core.Configuration
             try
             {
                 services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-                services.TryAddTransient(typeof(IDesignTimeDbContextFactory<DrypointDbContext>), typeof(DrypointDbContextFactory)); 
+                services.TryAddTransient(typeof(IDesignTimeDbContextFactory<DrypointDbContext>), typeof(DrypointDbContextFactory));
                 services.TryAddTransient(typeof(IRepository<,>), typeof(DrypointBaseRepository<,>));
                 AddCommonService(services);
 
@@ -37,7 +37,7 @@ namespace Drypoint.Host.Core.Configuration
             }
         }
 
-        private static void AddCommonService(IServiceCollection  services)
+        private static void AddCommonService(IServiceCollection services)
         {
             AddService(services, "Drypoint.Host.Core");
             AddService(services, "Drypoint.Application");
@@ -45,7 +45,7 @@ namespace Drypoint.Host.Core.Configuration
             AddService(services, "Drypoint.EntityFrameworkCore");
         }
 
-        private static void AddService(IServiceCollection services,string assemblyName)
+        private static void AddService(IServiceCollection services, string assemblyName)
         {
             Assembly assembly = null;
 
@@ -56,7 +56,7 @@ namespace Drypoint.Host.Core.Configuration
             }
             catch (Exception ex)
             {
-                return ;
+                return;
             }
 
             List<Type> ts = assembly.GetTypes().ToList();
@@ -75,14 +75,17 @@ namespace Drypoint.Host.Core.Configuration
                     {
                         continue;
                     }
-                    if (ltInterface.FirstOrDefault(d => d == typeof(ISingletonDependency)) != null)
+                    if (ltInterface.Any(aa => aa.Name == "I" + item.Name))
                     {
-                        Type itface = ltInterface.FirstOrDefault(d => d.GetType() != typeof(ISingletonDependency));
-                        services.TryAddSingleton(itface, item);
-                    }
-                    else
-                    {
-                        services.AddTransient(ltInterface.FirstOrDefault(), item);
+                        if (ltInterface.Any(aa => aa == typeof(ISingletonDependency)))
+                        {
+                            Type itface = ltInterface.FirstOrDefault(aa => aa.GetType() != typeof(ISingletonDependency) && aa.Name == "I" + item.Name);
+                            services.TryAddSingleton(itface, item);
+                        }
+                        else
+                        {
+                            services.AddTransient(ltInterface.FirstOrDefault(aa => aa.Name == "I" + item.Name), item);
+                        }
                     }
                 }
 
