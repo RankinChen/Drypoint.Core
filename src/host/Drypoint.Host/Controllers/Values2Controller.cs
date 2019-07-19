@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Drypoint.Host.Controllers
 {
-    [ApiExplorerSettings(GroupName = "admin")]
+    [ApiExplorerSettings(GroupName = "app")]
     [Route("api/[controller]")]
     [ApiController]
     public class Values2Controller : ControllerBase

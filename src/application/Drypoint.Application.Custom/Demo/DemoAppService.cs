@@ -16,8 +16,10 @@ namespace Drypoint.Application.Custom.Demo
     /// <summary>
     /// 
     /// </summary>
+    [ApiController]
+    [ApiExplorerSettings(GroupName = "admin")]
     [Produces("application/json")]
-    [Route(DrypointConsts.ApiPrefix + "[controller]")]
+    [Route(DrypointConsts.ApiPrefix + "Demo")]
     public class DemoAppService : ApplicationService,IDemoAppService
     {
         private readonly ILogger _logger;
@@ -34,9 +36,10 @@ namespace Drypoint.Application.Custom.Demo
         }
 
         /// <summary>
-        /// 
+        /// 测试获取
         /// </summary>
-        /// <returns></returns>
+        /// <returns>无参 有返回值</returns>
+        [HttpGet]
         public ListResultDto<DemoOutputDto> GetAll()
         {
             var data = _userBaseRepository.GetAll().ToList();
@@ -52,6 +55,29 @@ namespace Drypoint.Application.Custom.Demo
             };
 
             return ltResult;
+        }
+
+        /// <summary>
+        /// 测试获取根据Id
+        /// </summary>
+        /// <param name="id">测试编号</param>
+        /// <returns>有参 有返回值</returns>
+        [HttpGet("{id}")]
+        public DemoOutputDto GetById(int id)
+        {
+            var data = _userBaseRepository.GetAll().ToList();
+            var resultData = data.Select(aa => new DemoOutputDto
+            {
+                Id = aa.Id,
+                Name = aa.Name
+            }).ToList();
+
+            ListResultDto<DemoOutputDto> ltResult = new ListResultDto<DemoOutputDto>()
+            {
+                Items = resultData
+            };
+
+            return resultData.FirstOrDefault();
         }
     }
 }
