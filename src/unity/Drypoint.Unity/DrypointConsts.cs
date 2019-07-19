@@ -15,5 +15,16 @@ namespace Drypoint.Unity
         /// 接口前缀
         /// </summary>
         public const string ApiPrefix = "api/";
+
+
+        /// <summary>
+        /// 列表数据 分页 每页最多显示条数
+        /// </summary>
+        public const int MaxPageSize = 50;
+
+        /// <summary>
+        /// 列表数据 每页条数
+        /// </summary>
+        public const int DefaultPageSize =10;
     }
 }

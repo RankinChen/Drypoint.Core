@@ -1,5 +1,9 @@
-﻿using Drypoint.Unity.Dependency;
+﻿using Drypoint.EntityFrameworkCore.EntityFrameworkCore;
+using Drypoint.EntityFrameworkCore.Repositories;
+using Drypoint.Unity.Dependency;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
@@ -21,6 +25,8 @@ namespace Drypoint.Host.Core.Configuration
             try
             {
                 services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+                services.TryAddTransient(typeof(IDesignTimeDbContextFactory<DrypointDbContext>), typeof(DrypointDbContextFactory)); 
+                services.TryAddTransient(typeof(IRepository<,>), typeof(DrypointBaseRepository<,>));
                 AddCommonService(services);
 
 

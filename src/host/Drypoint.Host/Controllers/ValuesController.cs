@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Drypoint.Application.Custom.Demo;
 using Drypoint.EntityFrameworkCore.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,15 +12,20 @@ namespace Drypoint.Host.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        public readonly IDemoAppService demoAppService;
+
+        public ValuesController(IDemoAppService _demoAppService)
+        {
+            demoAppService = _demoAppService;
+        }
+
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            DrypointDbContextFactory df = new DrypointDbContextFactory();
-            df.CreateDbContext(new string[5]);
-            
+            var result = demoAppService.GetAll();
 
-                return new string[] { "value1", "value2" };
+            return new string[] { "value1", "value2" };
         }
 
         // GET api/values/5

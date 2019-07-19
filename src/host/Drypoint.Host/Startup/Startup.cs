@@ -15,6 +15,7 @@ using Drypoint.Host.Core.Configuration;
 using Drypoint.Extensions;
 using Microsoft.AspNetCore.Http;
 using Drypoint.Host.Core.Identity;
+using NLog.Extensions.Logging;
 
 namespace Drypoint.Host.Startup
 {
@@ -120,6 +121,8 @@ namespace Drypoint.Host.Startup
             {
                 _logger.LogError("执行ConfigureCustomServices出现错误", ex);
             }
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -134,6 +137,14 @@ namespace Drypoint.Host.Startup
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+
+            if (_appConfiguration["Logging:LogType"].ToLower()=="nlog")
+            {
+                loggerFactory.AddNLog();
+            }
+
+
             app.UseCors(LocalCorsPolicyName); //Enable CORS!
 
             app.UseAuthentication();

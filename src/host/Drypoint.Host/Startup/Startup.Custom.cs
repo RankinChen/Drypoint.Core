@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Drypoint.Host.Core.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,32 +26,11 @@ namespace Drypoint.Host.Startup
             }
 
             //添加自定义API文档生成(支持文档配置)
-            //services.AddCustomSwaggerGen(_appConfiguration, _hostingEnvironment);
-            _logger.LogInformation($"Abp:Hangfire:IsEnabled:{_appConfiguration["Abp:Hangfire:IsEnabled"]}");
-            //仅在后台服务启用
-            //if (!_appConfiguration["Abp:Hangfire:IsEnabled"].IsNullOrEmpty() && Convert.ToBoolean(_appConfiguration["Abp:Hangfire:IsEnabled"]))
-            //{
-            //    //使用Hangfire替代默认的任务调度
-            //    services.AddHangfire(config =>
-            //    {
-            //        config.UseSqlServerStorage(_appConfiguration.GetConnectionString("Default"));
-            //    });
-            //}
+            services.AddCustomSwaggerGen(_appConfiguration, _hostingEnvironment);
         }
 
         partial void CustomConfigure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            ////仅在后台服务启用
-            //if (!_appConfiguration["Abp:Hangfire:IsEnabled"].IsNullOrEmpty() && Convert.ToBoolean(_appConfiguration["Abp:Hangfire:IsEnabled"]) && !_appConfiguration["Abp:Hangfire:DashboardEnabled"].IsNullOrEmpty() && Convert.ToBoolean(_appConfiguration["Abp:Hangfire:DashboardEnabled"]))
-            //{
-            //    //启用Hangfire仪表盘
-            //    app.UseHangfireDashboard("/hangfire", new DashboardOptions
-            //    {
-            //        Authorization = new[] { new AbpHangfireAuthorizationFilter(AppPermissions.Pages_Administration_HangfireDashboard) }
-            //    });
-            //    app.UseHangfireServer();
-            //}
-
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -64,6 +44,9 @@ namespace Drypoint.Host.Startup
 
             //启用自定义API文档(支持文档配置)
             //app.UseCustomSwaggerUI(_appConfiguration);
+
+            //启用中间件为生成的 Swagger 规范和 Swagger UI 提供服务
+            app.UseCustomSwaggerUI(_appConfiguration);
         }
     }
 }
