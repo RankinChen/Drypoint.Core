@@ -42,9 +42,6 @@ namespace Drypoint.Host.Startup
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            //启用自定义API文档(支持文档配置)
-            //app.UseCustomSwaggerUI(_appConfiguration);
-
             //启用中间件为生成的 Swagger 规范和 Swagger UI 提供服务
             app.UseCustomSwaggerUI(_appConfiguration);
         }
