@@ -15,6 +15,8 @@ namespace Drypoint.Application.Custom.Demo
     /// <summary>
     /// 
     /// </summary>
+    [ApiVersion("1")] //区分版本标记 可以叠加连个属性 在对应不同的版本中出现
+    [ApiVersion("2")] 
     [Produces("application/json")]
     [Route(DrypointConsts.ApiPrefix + "[controller]")]
     public class DemoAppService : IDemoAppService

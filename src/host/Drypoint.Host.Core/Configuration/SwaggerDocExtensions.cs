@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -12,10 +13,21 @@ namespace Drypoint.Host.Core.Configuration
     {
         public static void AddCustomSwaggerGen(this IServiceCollection services, IConfiguration configuration, IHostingEnvironment hostingEnvironment)
         {
+            services.AddApiVersioning(options =>
+            {
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.ApiVersionReader = new UrlSegmentApiVersionReader();
+            })
+            .AddVersionedApiExplorer(options =>
+            {
+                options.GroupNameFormat = "VVV";
+                options.SubstituteApiVersionInUrl = true;
+            }); ;
+
             //以下二选一
             //注册OpenAPI
             //services.AddOpenApiDocument();
-            
+
             //注册Swagger
             services.AddSwaggerDocument(config =>
             {
@@ -37,6 +49,13 @@ namespace Drypoint.Host.Core.Configuration
                         Url = configuration["SwaggerDoc:License:Url"]
                     };
                 };
+                config.DocumentName = "App";
+                config.ApiGroupNames = new[] { "1.1" };
+            })
+            .AddSwaggerDocument(document =>
+            {
+                document.DocumentName = "Admin";
+                document.ApiGroupNames = new[] { "2", "3" };
             });
         }
 
@@ -48,7 +67,10 @@ namespace Drypoint.Host.Core.Configuration
             app.UseOpenApi();
 
             //以下两种 二选一
-            app.UseSwaggerUi3();
+            app.UseSwaggerUi3(config =>
+            {
+
+            });
             //app.UseReDoc();
         }
     }
