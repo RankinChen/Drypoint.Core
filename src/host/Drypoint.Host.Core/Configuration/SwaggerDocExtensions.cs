@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,7 @@ namespace Drypoint.Host.Core.Configuration
         {
             services.AddApiVersioning(options =>
             {
+                options.DefaultApiVersion = new ApiVersion(1,0);
                 options.AssumeDefaultVersionWhenUnspecified = true;
                 options.ApiVersionReader = new UrlSegmentApiVersionReader();
             })
@@ -50,7 +52,7 @@ namespace Drypoint.Host.Core.Configuration
                     };
                 };
                 config.DocumentName = "App";
-                config.ApiGroupNames = new[] { "1.1" };
+                config.ApiGroupNames = new[] { "1" };
             })
             .AddSwaggerDocument(document =>
             {

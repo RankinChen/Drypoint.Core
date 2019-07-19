@@ -8,24 +8,24 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Drypoint.Host.Controllers
 {
-    [ApiVersion("1.1")]
+    [ApiVersion("1")]
     [ApiVersion("2", Deprecated = false)] //区分版本标记 可以叠加连个属性 在对应不同的版本中出现 Deprecated为true 将显示删除线
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     public class Values2Controller : ControllerBase
     {
-        public readonly IDemoAppService demoAppService;
+        public readonly IDemoAppService _demoAppService;
 
-        public Values2Controller(IDemoAppService _demoAppService)
+        public Values2Controller(IDemoAppService demoAppService)
         {
-            demoAppService = _demoAppService;
+            _demoAppService = demoAppService;
         }
 
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            var result = demoAppService.GetAll();
+            var result = _demoAppService.GetAll();
 
             return new string[] { "value1", "value2" };
         }

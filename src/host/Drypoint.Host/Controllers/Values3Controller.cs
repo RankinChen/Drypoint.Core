@@ -8,23 +8,24 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Drypoint.Host.Controllers
 {
+    [ApiVersion("1")]
     [ApiVersion("3")]
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     public class Values3Controller : ControllerBase
     {
-        public readonly IDemoAppService demoAppService;
+        public readonly IDemoAppService _demoAppService;
 
-        public Values3Controller(IDemoAppService _demoAppService)
+        public Values3Controller(IDemoAppService demoAppService)
         {
-            demoAppService = _demoAppService;
+            _demoAppService = demoAppService;
         }
 
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            var result = demoAppService.GetAll();
+            var result = _demoAppService.GetAll();
 
             return new string[] { "value1", "value2" };
         }

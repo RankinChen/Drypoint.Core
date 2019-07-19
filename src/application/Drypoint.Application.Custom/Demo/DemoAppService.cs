@@ -16,10 +16,9 @@ namespace Drypoint.Application.Custom.Demo
     /// <summary>
     /// 
     /// </summary>
-    [ApiVersion("2")] 
     [Produces("application/json")]
     [Route(DrypointConsts.ApiPrefix + "[controller]")]
-    public class DemoAppService : ApplicationService, IDemoAppService
+    public class DemoAppService : IDemoAppService
     {
         private readonly ILogger _logger;
         private readonly IRepository<UserBase, long> _userBaseRepository;
