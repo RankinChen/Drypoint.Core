@@ -10,8 +10,8 @@ using Drypoint.Core.Configuration;
 
 namespace Drypoint.Core.Authorization.Users
 {
-    [Table("DrypointUserBase")]
-    public class UserBase : FullAuditedEntity<long>, IPassivable
+    [Table("DrypointUser")]
+    public class User : FullAuditedEntity<long>, IPassivable
     {
         [StringLength(64)]
         public virtual string AuthenticationSource { get; set; }
@@ -80,7 +80,7 @@ namespace Drypoint.Core.Authorization.Users
 
         public virtual bool IsActive { get; set; }
 
-        protected UserBase()
+        protected User()
         {
             IsActive = true;
             SecurityStamp = Guid.NewGuid().ToString();

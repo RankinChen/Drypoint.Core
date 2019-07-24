@@ -12,7 +12,7 @@ namespace Drypoint.Host.Core.Identity
         public static IdentityBuilder Register(IServiceCollection services)
         {
             services.AddLogging();
-            return services.AddIdentityCore<UserBase>(options =>
+            return services.AddIdentityCore<User>(options =>
              {
 
              });

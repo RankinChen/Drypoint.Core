@@ -23,13 +23,13 @@ namespace Drypoint.Application.Custom.Demo
     public class DemoAppService : ApplicationService,IDemoAppService
     {
         private readonly ILogger _logger;
-        private readonly IRepository<UserBase, long> _userBaseRepository;
+        private readonly IRepository<User, long> _userBaseRepository;
 
         /// <summary>
         ///  构造函数
         /// </summary>
         public DemoAppService(ILogger<DemoAppService> logger,
-            IRepository<UserBase, long> userBaseRepository)
+            IRepository<User, long> userBaseRepository)
         {
             _logger = logger;
             _userBaseRepository = userBaseRepository;

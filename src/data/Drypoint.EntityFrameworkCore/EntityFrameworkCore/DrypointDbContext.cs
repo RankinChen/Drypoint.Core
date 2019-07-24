@@ -20,9 +20,9 @@ namespace Drypoint.EntityFrameworkCore.EntityFrameworkCore
 {
     public partial class DrypointDbContext : DbContext
     {
-        public virtual DbSet<RoleBase> Roles { get; set; }
+        public virtual DbSet<Role> Roles { get; set; }
 
-        public virtual DbSet<UserBase> Users { get; set; }
+        public virtual DbSet<User> Users { get; set; }
 
         public virtual DbSet<UserLogin> UserLogins { get; set; }
 

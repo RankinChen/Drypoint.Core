@@ -8,8 +8,8 @@ using Drypoint.Core.Common;
 
 namespace Drypoint.Core.Authorization.Roles
 {
-    [Table("DrypointRoleBase")]
-    public class RoleBase : FullAuditedEntity<int>
+    [Table("DrypointRole")]
+    public class Role : FullAuditedEntity<int>
     {
         [Required]
         [StringLength(32)]
@@ -25,18 +25,18 @@ namespace Drypoint.Core.Authorization.Roles
         [ForeignKey("RoleId")]
         public virtual ICollection<RolePermissionSetting> Permissions { get; set; }
 
-        public RoleBase()
+        public Role()
         {
             Name = Guid.NewGuid().ToString("N");
         }
 
-        public RoleBase( string displayName)
+        public Role( string displayName)
             : this()
         {
             DisplayName = displayName;
         }
 
-        public RoleBase( string name, string displayName)
+        public Role( string name, string displayName)
             : this(displayName)
         {
             Name = name;

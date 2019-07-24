@@ -26,7 +26,7 @@ namespace Drypoint.Core.Authorization.Roles
 
         }
 
-        public RoleClaim(RoleBase role, Claim claim)
+        public RoleClaim(Role role, Claim claim)
         {
             RoleId = role.Id;
             ClaimType = claim.Type;

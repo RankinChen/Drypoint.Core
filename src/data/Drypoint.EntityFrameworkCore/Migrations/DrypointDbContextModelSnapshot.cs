@@ -84,7 +84,7 @@ namespace Drypoint.EntityFrameworkCore.Migrations
                     b.HasDiscriminator<string>("Discriminator").HasValue("PermissionSetting");
                 });
 
-            modelBuilder.Entity("Drypoint.Core.Authorization.Roles.RoleBase", b =>
+            modelBuilder.Entity("Drypoint.Core.Authorization.Roles.Role", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -118,10 +118,10 @@ namespace Drypoint.EntityFrameworkCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DrypointRoleBase");
+                    b.ToTable("DrypointRole");
                 });
 
-            modelBuilder.Entity("Drypoint.Core.Authorization.Users.UserBase", b =>
+            modelBuilder.Entity("Drypoint.Core.Authorization.Users.User", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -192,7 +192,7 @@ namespace Drypoint.EntityFrameworkCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DrypointUserBase");
+                    b.ToTable("DrypointUser");
                 });
 
             modelBuilder.Entity("Drypoint.Core.Authorization.Users.UserClaim", b =>
@@ -352,7 +352,7 @@ namespace Drypoint.EntityFrameworkCore.Migrations
 
             modelBuilder.Entity("Drypoint.Core.Authorization.Users.UserClaim", b =>
                 {
-                    b.HasOne("Drypoint.Core.Authorization.Users.UserBase")
+                    b.HasOne("Drypoint.Core.Authorization.Users.User")
                         .WithMany("Claims")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -360,7 +360,7 @@ namespace Drypoint.EntityFrameworkCore.Migrations
 
             modelBuilder.Entity("Drypoint.Core.Authorization.Users.UserLogin", b =>
                 {
-                    b.HasOne("Drypoint.Core.Authorization.Users.UserBase")
+                    b.HasOne("Drypoint.Core.Authorization.Users.User")
                         .WithMany("Logins")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -368,7 +368,7 @@ namespace Drypoint.EntityFrameworkCore.Migrations
 
             modelBuilder.Entity("Drypoint.Core.Authorization.Users.UserRole", b =>
                 {
-                    b.HasOne("Drypoint.Core.Authorization.Users.UserBase")
+                    b.HasOne("Drypoint.Core.Authorization.Users.User")
                         .WithMany("Roles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -376,14 +376,14 @@ namespace Drypoint.EntityFrameworkCore.Migrations
 
             modelBuilder.Entity("Drypoint.Core.Configuration.Setting", b =>
                 {
-                    b.HasOne("Drypoint.Core.Authorization.Users.UserBase")
+                    b.HasOne("Drypoint.Core.Authorization.Users.User")
                         .WithMany("Settings")
                         .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Drypoint.Core.Authorization.Roles.RolePermissionSetting", b =>
                 {
-                    b.HasOne("Drypoint.Core.Authorization.Roles.RoleBase")
+                    b.HasOne("Drypoint.Core.Authorization.Roles.Role")
                         .WithMany("Permissions")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -391,7 +391,7 @@ namespace Drypoint.EntityFrameworkCore.Migrations
 
             modelBuilder.Entity("Drypoint.Core.Authorization.Users.UserPermissionSetting", b =>
                 {
-                    b.HasOne("Drypoint.Core.Authorization.Users.UserBase")
+                    b.HasOne("Drypoint.Core.Authorization.Users.User")
                         .WithMany("Permissions")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);

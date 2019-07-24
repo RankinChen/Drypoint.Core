@@ -35,7 +35,7 @@ namespace Drypoint.EntityFrameworkCore.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DrypointRoleBase",
+                name: "DrypointRole",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -54,11 +54,11 @@ namespace Drypoint.EntityFrameworkCore.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DrypointRoleBase", x => x.Id);
+                    table.PrimaryKey("PK_DrypointRole", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "DrypointUserBase",
+                name: "DrypointUser",
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
@@ -90,7 +90,7 @@ namespace Drypoint.EntityFrameworkCore.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DrypointUserBase", x => x.Id);
+                    table.PrimaryKey("PK_DrypointUser", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -131,15 +131,15 @@ namespace Drypoint.EntityFrameworkCore.Migrations
                 {
                     table.PrimaryKey("PK_DrypointPermissions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DrypointPermissions_DrypointRoleBase_RoleId",
+                        name: "FK_DrypointPermissions_DrypointRole_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "DrypointRoleBase",
+                        principalTable: "DrypointRole",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_DrypointPermissions_DrypointUserBase_UserId",
+                        name: "FK_DrypointPermissions_DrypointUser_UserId",
                         column: x => x.UserId,
-                        principalTable: "DrypointUserBase",
+                        principalTable: "DrypointUser",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -162,9 +162,9 @@ namespace Drypoint.EntityFrameworkCore.Migrations
                 {
                     table.PrimaryKey("PK_DrypointSettings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DrypointSettings_DrypointUserBase_UserId",
+                        name: "FK_DrypointSettings_DrypointUser_UserId",
                         column: x => x.UserId,
-                        principalTable: "DrypointUserBase",
+                        principalTable: "DrypointUser",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -185,9 +185,9 @@ namespace Drypoint.EntityFrameworkCore.Migrations
                 {
                     table.PrimaryKey("PK_DrypointUserClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DrypointUserClaims_DrypointUserBase_UserId",
+                        name: "FK_DrypointUserClaims_DrypointUser_UserId",
                         column: x => x.UserId,
-                        principalTable: "DrypointUserBase",
+                        principalTable: "DrypointUser",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -206,9 +206,9 @@ namespace Drypoint.EntityFrameworkCore.Migrations
                 {
                     table.PrimaryKey("PK_DrypointUserLogins", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DrypointUserLogins_DrypointUserBase_UserId",
+                        name: "FK_DrypointUserLogins_DrypointUser_UserId",
                         column: x => x.UserId,
-                        principalTable: "DrypointUserBase",
+                        principalTable: "DrypointUser",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -228,9 +228,9 @@ namespace Drypoint.EntityFrameworkCore.Migrations
                 {
                     table.PrimaryKey("PK_DrypointUserRoles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DrypointUserRoles_DrypointUserBase_UserId",
+                        name: "FK_DrypointUserRoles_DrypointUser_UserId",
                         column: x => x.UserId,
-                        principalTable: "DrypointUserBase",
+                        principalTable: "DrypointUser",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -290,10 +290,10 @@ namespace Drypoint.EntityFrameworkCore.Migrations
                 name: "DrypointUserRoles");
 
             migrationBuilder.DropTable(
-                name: "DrypointRoleBase");
+                name: "DrypointRole");
 
             migrationBuilder.DropTable(
-                name: "DrypointUserBase");
+                name: "DrypointUser");
         }
     }
 }
