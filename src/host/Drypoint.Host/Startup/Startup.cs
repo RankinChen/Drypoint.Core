@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Http;
 using NLog.Extensions.Logging;
 using Drypoint.Host.Core.IdentityServer;
 using Newtonsoft.Json;
-using Drypoint.Host.Core.Authentication;
+using IdentityServer4.AccessTokenValidation;
 
 namespace Drypoint.Host.Startup
 {
@@ -61,7 +61,8 @@ namespace Drypoint.Host.Startup
             services.AddMvc(options =>
             {
                 options.Filters.Add(new CorsAuthorizationFilterFactory(LocalCorsPolicyName));
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+            })
+            .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
             .AddJsonOptions(options =>
             {
                 //忽略循环引用
@@ -99,14 +100,7 @@ namespace Drypoint.Host.Startup
                         .AllowAnyMethod()
                         .AllowCredentials();
                 });
-            });            
-            
-            //Identity server
-            if (bool.Parse(_appConfiguration["IdentityServer:IsEnabled"]))
-            {
-                IdentityServerRegistrar.Register(services, _appConfiguration);
-            }
-            services.AddAuthentication().AddAuthenConfigure(_appConfiguration);
+            });
 
             if (bool.Parse(_appConfiguration["App:HttpsRedirection"] ?? "false"))
             {
@@ -173,13 +167,6 @@ namespace Drypoint.Host.Startup
                 _logger.LogWarning("准备启用HTTS跳转...");
                 //建议开启，以在浏览器显示安全图标
                 app.UseHttpsRedirection();
-            }
-
-            app.UseAuthentication();
-            if (bool.Parse(_appConfiguration["IdentityServer:IsEnabled"]))
-            {
-                //使用路径http://xxxxxx/.well-known/openid-configuration查看
-                app.UseIdentityServer();
             }
             
             app.UseStaticFiles();

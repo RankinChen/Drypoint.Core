@@ -29,7 +29,7 @@ namespace Drypoint.Unity
 
         public const string DefaultPassPhrase = "gsKxGZ012HLL3MI5";
 
-        public const string CacheKey_TokenValidity = "token_validity_key";
+        public const string CacheKey_TokenValidityKey = "token_validity_key";
 
         public static string CacheKey_UserIdentifier = "user_identifier";
     }

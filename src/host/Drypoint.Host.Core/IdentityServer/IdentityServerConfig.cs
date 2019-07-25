@@ -11,22 +11,22 @@ namespace Drypoint.Host.Core.IdentityServer
         /// api资源
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<IdentityServer4.Models.ApiResource> GetApiResources()
+        public static IEnumerable<IdentityServer4.Models.ApiResource> GetApiResources(IConfigurationRoot configuration)
         {
             return new List<ApiResource>
             {
                 new ApiResource()
                 {
                     //希望保护的API
-                    Name="api",
+                    Name=configuration["IdentityServer:ApiName"],
                     DisplayName="Default (all) API",
                     Description = "All API",
-                    ApiSecrets= {new Secret("secret".Sha256()) },
+                    ApiSecrets= {new Secret(configuration["IdentityServer:ApiSecret"].Sha256()) },
                     //请求范围
-                    Scopes = new List<Scope> {
-                        new Scope("api.read"),
-                        new Scope("api.write")
-                    }
+                    //Scopes = new List<Scope> {
+                    //    new Scope("api.read"),
+                    //    new Scope("api.write")
+                    //}
                 }
             };
         }
@@ -35,7 +35,7 @@ namespace Drypoint.Host.Core.IdentityServer
         /// 身份资源范围
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<IdentityResource> GetIdentityResources()
+        public static IEnumerable<IdentityResource> GetIdentityResources(IConfigurationRoot configuration)
         {
             //IdentityServer支持的一些标准OpenID Connect定义的范围
             return new List<IdentityResource>
@@ -45,10 +45,10 @@ namespace Drypoint.Host.Core.IdentityServer
                 new IdentityResources.Email(),
                 new IdentityResources.Phone(),
                 //自定义
-                new IdentityResource {
-                    Name = "role",
-                    UserClaims = new List<string> {"role"}
-                }
+                //new IdentityResource {
+                //    Name = "role",
+                //    UserClaims = new List<string> {"role"}
+                //}
             };
         }
 
@@ -65,7 +65,8 @@ namespace Drypoint.Host.Core.IdentityServer
                 {
                     ClientId = child["ClientId"],
                     ClientName = child["ClientName"],
-                    AllowedGrantTypes = child.GetSection("AllowedGrantTypes").GetChildren().Select(c => c.Value).ToArray(),
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,   //child.GetSection("AllowedGrantTypes").GetChildren().Select(c => c.Value).ToArray(),
+                    AccessTokenType = AccessTokenType.Jwt,
                     RequireConsent = bool.Parse(child["RequireConsent"] ?? "false"),
                     AllowOfflineAccess = bool.Parse(child["AllowOfflineAccess"] ?? "false"),
                     ClientSecrets = child.GetSection("ClientSecrets").GetChildren().Select(secret => new Secret(secret["Value"].Sha256())).ToArray(),

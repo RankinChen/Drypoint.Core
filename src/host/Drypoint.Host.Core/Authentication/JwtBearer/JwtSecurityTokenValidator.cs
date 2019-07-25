@@ -1,6 +1,4 @@
 ﻿using Drypoint.Unity;
-using IdentityServer4.Validation;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -8,7 +6,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Drypoint.Host.Core.Authentication.JwtBearer
 {
@@ -38,34 +35,32 @@ namespace Drypoint.Host.Core.Authentication.JwtBearer
             //var principal = _tokenHandler.ValidateToken(securityToken, validationParameters, out validatedToken);
 
             //var userIdentifierString = principal.Claims.First(c => c.Type == DrypointConsts.CacheKey_UserIdentifier);
-            //var tokenValidityKeyInClaims = principal.Claims.First(c => c.Type == DrypointConsts.CacheKey_TokenValidity);
+            //var tokenValidityKeyInClaims = principal.Claims.First(c => c.Type == DrypointConsts.CacheKey_TokenValidityKey);
 
             //var tokenValidityKeyInCache = cacheManager
-            //    .GetCache(DrypointConsts.CacheKey_TokenValidity)
+            //    .GetCache(DrypointConsts.CacheKey_TokenValidityKey)
             //    .GetOrDefault(tokenValidityKeyInClaims.Value);
 
             //if (tokenValidityKeyInCache != null) return principal;
 
-            //if (long.TryParse(userIdentifierString.Value, out long userIdentifier)) {
-
+            //if (long.TryParse(userIdentifierString.Value, out long userIdentifier))
+            //{
             //    var userManagerObject = userManager.Object;
 
             //    var user = userManagerObject.GetUser(userIdentifier);
-
             //    var isValidityKetValid = userManagerObject.IsTokenValidityKeyValidAsync(user, tokenValidityKeyInClaims.Value).Result;
-                
+
             //    if (isValidityKetValid)
             //    {
             //        cacheManager
-            //            .GetCache(DrypointConsts.CacheKey_TokenValidity)
+            //            .GetCache(DrypointConsts.CacheKey_TokenValidityKey)
             //            .Set(tokenValidityKeyInClaims.Value, "");
 
             //        return principal;
             //    }
+
             //}
-                
             throw new SecurityTokenException("invalid");
         }
-
     }
 }
