@@ -9,11 +9,10 @@ namespace Drypoint.Host.Core.IdentityServer
 {
     public static class IdentityServerRegistrar
     {
-        //TODO;需要修改
         public static void Register(IServiceCollection services, IConfigurationRoot configuration)
         {
             services.AddIdentityServer()
-                .AddDeveloperSigningCredential()
+                .AddDeveloperSigningCredential()        //使用演示签名证书
                 .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources())
                 .AddInMemoryApiResources(IdentityServerConfig.GetApiResources())
                 .AddInMemoryClients(IdentityServerConfig.GetClients(configuration));

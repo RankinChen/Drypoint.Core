@@ -7,29 +7,54 @@ namespace Drypoint.Host.Core.IdentityServer
 {
     public static class IdentityServerConfig
     {
+        /// <summary>
+        /// api资源
+        /// </summary>
+        /// <returns></returns>
         public static IEnumerable<IdentityServer4.Models.ApiResource> GetApiResources()
         {
             return new List<ApiResource>
             {
-                new ApiResource("default-api", "Default (all) API")
+                new ApiResource()
                 {
-                    Description = "AllFunctionalityYouHaveInTheApplication",
-                    ApiSecrets= {new Secret("secret") }
+                    //希望保护的API
+                    Name="api",
+                    DisplayName="Default (all) API",
+                    Description = "All API",
+                    ApiSecrets= {new Secret("secret".Sha256()) },
+                    //请求范围
+                    Scopes = new List<Scope> {
+                        new Scope("api.read"),
+                        new Scope("api.write")
+                    }
                 }
             };
         }
 
+        /// <summary>
+        /// 身份资源范围
+        /// </summary>
+        /// <returns></returns>
         public static IEnumerable<IdentityResource> GetIdentityResources()
         {
+            //IdentityServer支持的一些标准OpenID Connect定义的范围
             return new List<IdentityResource>
             {
-                new IdentityResources.OpenId(),
+                new IdentityResources.OpenId(),  //必须
                 new IdentityResources.Profile(),
                 new IdentityResources.Email(),
-                new IdentityResources.Phone()
+                new IdentityResources.Phone(),
+                //自定义
+                new IdentityResource {
+                    Name = "role",
+                    UserClaims = new List<string> {"role"}
+                }
             };
         }
 
+        /// <summary>
+        /// 客户端
+        /// </summary>
         public static IEnumerable<Client> GetClients(IConfigurationRoot configuration)
         {
             var clients = new List<Client>();

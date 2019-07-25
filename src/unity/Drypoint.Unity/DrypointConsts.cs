@@ -20,11 +20,17 @@ namespace Drypoint.Unity
         /// <summary>
         /// 列表数据 分页 每页最多显示条数
         /// </summary>
-        public const int MaxPageSize = 50;
+        public const int MaxPageSize = 1000;
 
         /// <summary>
         /// 列表数据 每页条数
         /// </summary>
         public const int DefaultPageSize =10;
+
+        public const string DefaultPassPhrase = "gsKxGZ012HLL3MI5";
+
+        public const string CacheKey_TokenValidity = "token_validity_key";
+
+        public static string CacheKey_UserIdentifier = "user_identifier";
     }
 }

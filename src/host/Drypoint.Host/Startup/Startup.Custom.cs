@@ -19,11 +19,6 @@ namespace Drypoint.Host.Startup
         partial void ConfigureCustomServices(IServiceCollection services)
         {
             _logger.LogInformation($"IdentityServer:IsEnabled:{_appConfiguration["IdentityServer:IsEnabled"]}");
-            //Identity server
-            if (bool.Parse(_appConfiguration["IdentityServer:IsEnabled"]))
-            {
-                //IdentityServerRegistrar.Register(services, _appConfiguration);
-            }
 
             //添加自定义API文档生成(支持文档配置)
             services.AddCustomSwaggerGen(_appConfiguration, _hostingEnvironment);
