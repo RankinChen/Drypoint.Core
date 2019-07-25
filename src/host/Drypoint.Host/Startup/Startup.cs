@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Http;
 using NLog.Extensions.Logging;
 using Drypoint.Host.Core.IdentityServer;
 using Newtonsoft.Json;
+using Drypoint.Host.Core.Authentication;
 
 namespace Drypoint.Host.Startup
 {
