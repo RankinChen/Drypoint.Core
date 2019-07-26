@@ -21,14 +21,32 @@ namespace Drypoint.Host.Startup
         /// <param name="services"></param>
         partial void ConfigureCustomServices(IServiceCollection services)
         {
-            _logger.LogInformation($"IdentityServer:IsEnabled:{_appConfiguration["IdentityServer:IsEnabled"]}");
             //Identity server(注：服务端和资源端 应分开两个API)
             //授权相关：服务端代码
-            services.AddIdentityServer()
-                    .AddDeveloperSigningCredential()        //使用演示签名证书
-                    .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources(_appConfiguration))
-                    .AddInMemoryApiResources(IdentityServerConfig.GetApiResources(_appConfiguration))
-                    .AddInMemoryClients(IdentityServerConfig.GetClients(_appConfiguration));
+            services.AddIdentityServer(options =>
+            {
+                //用户交互配置 主要涉及到入口地址参数等
+                options.UserInteraction = new IdentityServer4.Configuration.UserInteractionOptions
+                {
+                    LoginUrl = "/Account/Login",
+                    LogoutUrl = "/Account/Logout",
+                    ConsentUrl = "/Account/Consent",
+                    //ErrorUrl = "/Account/Error",
+                    LoginReturnUrlParameter = "ReturnUrl",
+                    LogoutIdParameter = "logoutId",
+                    ConsentReturnUrlParameter = "ReturnUrl",
+                    ErrorIdParameter = "errorId",
+                    CustomRedirectReturnUrlParameter = "ReturnUrl",
+                    CookieMessageThreshold = 5
+                };
+            }).AddDeveloperSigningCredential()        //使用演示签名证书
+            //.AddSigningCredential(new X509Certificate2(Path.Combine(AppContext.BaseDirectory, Configuration["Certs:Path"]), Configuration["Certs:Pwd"]))
+              .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources(_appConfiguration))
+              .AddInMemoryApiResources(IdentityServerConfig.GetApiResources(_appConfiguration))
+              .AddInMemoryClients(IdentityServerConfig.GetClients(_appConfiguration))
+              .AddResourceOwnerValidator<CustomResourceOwnerPasswordValidator>()
+              .AddProfileService<CustomProfileService>();
+
 
             //授权相关:资源端代码
             AuthConfigurer.Configure(services, _appConfiguration);

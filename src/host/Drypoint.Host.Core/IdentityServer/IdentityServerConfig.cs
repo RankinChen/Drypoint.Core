@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using IdentityServer4;
 using IdentityServer4.Models;
 using Microsoft.Extensions.Configuration;
 
@@ -65,18 +66,36 @@ namespace Drypoint.Host.Core.IdentityServer
                 {
                     ClientId = child["ClientId"],
                     ClientName = child["ClientName"],
-                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,   //child.GetSection("AllowedGrantTypes").GetChildren().Select(c => c.Value).ToArray(),
+                    AllowedGrantTypes = child.GetSection("AllowedGrantTypes").GetChildren().Select(c => c.Value).ToArray(),
+                    AllowedCorsOrigins= child.GetSection("AllowedCorsOrigins").GetChildren().Select(c => c.Value)?.ToArray(),
                     AccessTokenType = AccessTokenType.Jwt,
                     RequireConsent = bool.Parse(child["RequireConsent"] ?? "false"),
                     AllowOfflineAccess = bool.Parse(child["AllowOfflineAccess"] ?? "false"),
                     ClientSecrets = child.GetSection("ClientSecrets").GetChildren().Select(secret => new Secret(secret["Value"].Sha256())).ToArray(),
-                    AllowedScopes = child.GetSection("AllowedScopes").GetChildren().Select(c => c.Value).ToArray(),
+                    AllowedScopes = child.GetSection("AllowedScopes").GetChildren().Select(c => c.Value).ToArray(),     
                     RedirectUris = child.GetSection("RedirectUris").GetChildren().Select(c => c.Value).ToArray(),
                     PostLogoutRedirectUris = child.GetSection("PostLogoutRedirectUris").GetChildren().Select(c => c.Value).ToArray(),
                 });
             }
 
             return clients;
+        }
+
+        public static List<IdentityServer4.Test.TestUser> GetTestUser() {
+            List<IdentityServer4.Test.TestUser> ltUser = new List<IdentityServer4.Test.TestUser>();
+
+            ltUser.Add(new IdentityServer4.Test.TestUser {
+                SubjectId="1",
+                Username = "admin",
+                Password = "123456"
+            });
+            ltUser.Add(new IdentityServer4.Test.TestUser
+            {
+                SubjectId="2",
+                Username = "user",
+                Password = "123456"
+            });
+            return ltUser;
         }
     }
 }

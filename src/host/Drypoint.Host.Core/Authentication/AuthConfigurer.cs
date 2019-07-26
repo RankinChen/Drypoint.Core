@@ -1,6 +1,7 @@
 ﻿using Drypoint.Host.Core.Authentication.JwtBearer;
 using Drypoint.Unity;
 using IdentityModel;
+using IdentityServer4;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -10,9 +11,11 @@ using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static IdentityServer4.IdentityServerConstants;
 
 namespace Drypoint.Host.Core.Authentication
 {
@@ -20,41 +23,36 @@ namespace Drypoint.Host.Core.Authentication
     {
         public static void Configure(IServiceCollection services, IConfiguration configuration)
         {
-            var authenticationBuilder = services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme);
-            authenticationBuilder.AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["Authentication:JwtBearer:SecurityKey"])),
-
-                    ValidateIssuer = true,
-                    ValidIssuer = configuration["Authentication:JwtBearer:Issuer"],
-
-                    ValidateAudience = true,
-                    ValidAudience = configuration["Authentication:JwtBearer:Audience"],
-
-                    ValidateLifetime = true,
-
-                    ClockSkew = TimeSpan.Zero
-                };
-
-                options.SecurityTokenValidators.Clear();
-                options.SecurityTokenValidators.Add(new JwtSecurityTokenValidator());
-
-                options.Events = new JwtBearerEvents
-                {
-                    OnMessageReceived = QueryStringTokenResolver
-                };
-            });
-
             IdentityModelEventSource.ShowPII = true;
-            authenticationBuilder.AddIdentityServerAuthentication(options =>
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            services.AddAuthentication(option =>
             {
+                //option.DefaultScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
+                option.DefaultChallengeScheme = ProtocolTypes.OpenIdConnect;
+            })
+            //访问客户端
+            .AddOpenIdConnect(ProtocolTypes.OpenIdConnect, "OpenID Connect", options =>
+            {
+                options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                options.SignOutScheme = IdentityServerConstants.SignoutScheme;
+                options.SaveTokens = true;
+
+                options.Authority = configuration["IdentityServer:Authority"];
+                options.ClientId = "hybrid";
+            })
+            //资源端
+            .AddIdentityServerAuthentication(options =>
+            {
+                options.JwtValidationClockSkew = TimeSpan.Zero;
                 options.Authority = configuration["IdentityServer:Authority"];
                 options.ApiName = configuration["IdentityServer:ApiName"];
                 options.ApiSecret = configuration["IdentityServer:ApiSecret"];
                 options.RequireHttpsMetadata = false;
+                //待测试
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = QueryStringTokenResolver
+                };
             });
         }
 
@@ -64,15 +62,15 @@ namespace Drypoint.Host.Core.Authentication
         {
             if (!context.HttpContext.Request.Path.HasValue ||
                 !context.HttpContext.Request.Path.Value.StartsWith("/signalr"))
-                //We are just looking for signalr clients
+            {
                 return Task.CompletedTask;
+            }
 
             var qsAuthToken = context.HttpContext.Request.Query["enc_auth_token"].FirstOrDefault();
             if (qsAuthToken == null)
-                //Cookie value does not matches to querystring value
+            {
                 return Task.CompletedTask;
-
-            //Set auth token from cookie
+            }
             context.Token = SimpleStringCipher.Instance.Decrypt(qsAuthToken, DrypointConsts.DefaultPassPhrase);
             return Task.CompletedTask;
         }
