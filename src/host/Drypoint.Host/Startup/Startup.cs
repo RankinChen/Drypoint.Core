@@ -18,6 +18,9 @@ using NLog.Extensions.Logging;
 using Drypoint.Host.Core.IdentityServer;
 using Newtonsoft.Json;
 using IdentityServer4.AccessTokenValidation;
+using CSRedis;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Redis;
 
 namespace Drypoint.Host.Startup
 {
@@ -51,11 +54,10 @@ namespace Drypoint.Host.Startup
             //DI
             services.AddServiceRegister();
 
-            //初始化缓存
-            services.AddStackExchangeRedisCache(options =>
-            {
-                options.Configuration = _appConfiguration["RedisConnectionString"];
-            });
+            //初始化缓存 参考 https://github.com/2881099/csredis
+            CSRedisClient csredis = new CSRedisClient(_appConfiguration["RedisConnectionString"]);
+            services.AddSingleton(csredis);
+            services.AddSingleton<IDistributedCache>(new CSRedisCache(csredis));
 
             //MVC
             services.AddMvc(options =>

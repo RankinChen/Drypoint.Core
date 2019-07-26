@@ -35,6 +35,10 @@ namespace Drypoint.Host.Core.IdentityServer
         {
             context.LogProfileRequest(_logger);
 
+            
+            //var claims = context.Subject.Claims.ToList();
+            //context.IssuedClaims = claims.ToList();
+
             //判断是否有请求Claim信息
             if (context.RequestedClaimTypes.Any())
             {

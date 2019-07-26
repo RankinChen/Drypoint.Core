@@ -30,7 +30,7 @@ namespace Drypoint.Host.Core.Authentication
                 //option.DefaultScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
                 option.DefaultChallengeScheme = ProtocolTypes.OpenIdConnect;
             })
-            //访问客户端
+            //访问客户端???
             .AddOpenIdConnect(ProtocolTypes.OpenIdConnect, "OpenID Connect", options =>
             {
                 options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
@@ -49,7 +49,7 @@ namespace Drypoint.Host.Core.Authentication
                 options.ApiSecret = configuration["IdentityServer:ApiSecret"];
                 options.RequireHttpsMetadata = false;
                 //待测试
-                options.Events = new JwtBearerEvents
+                options.JwtBearerEvents = new JwtBearerEvents
                 {
                     OnMessageReceived = QueryStringTokenResolver
                 };
@@ -60,13 +60,13 @@ namespace Drypoint.Host.Core.Authentication
          * SignalR无法发送授权头。因此，我们将它作为加密文本从查询字符串中获取。 */
         private static Task QueryStringTokenResolver(MessageReceivedContext context)
         {
-            if (!context.HttpContext.Request.Path.HasValue ||
-                !context.HttpContext.Request.Path.Value.StartsWith("/signalr"))
+            if (!context.Request.Path.HasValue ||
+                !context.Request.Path.Value.StartsWith("/signalr"))
             {
                 return Task.CompletedTask;
             }
 
-            var qsAuthToken = context.HttpContext.Request.Query["enc_auth_token"].FirstOrDefault();
+            var qsAuthToken = context.Request.Query["access_token"].FirstOrDefault();
             if (qsAuthToken == null)
             {
                 return Task.CompletedTask;
