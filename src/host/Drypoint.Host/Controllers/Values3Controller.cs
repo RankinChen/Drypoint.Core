@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Drypoint.Application.Custom.Demo;
 using Drypoint.EntityFrameworkCore.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Drypoint.Host.Controllers

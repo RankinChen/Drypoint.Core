@@ -141,7 +141,7 @@ namespace IdentityServer4.Quickstart.UI
                         // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
                         return Redirect(model.ReturnUrl);
                     }
-
+                     
                     // request for a local page
                     if (Url.IsLocalUrl(model.ReturnUrl))
                     {

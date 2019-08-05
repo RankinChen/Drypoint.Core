@@ -1,5 +1,6 @@
 ﻿using Drypoint.Core.Authorization.Users;
 using Drypoint.EntityFrameworkCore.Repositories;
+using Drypoint.Unity.Dependency;
 using IdentityServer4.Extensions;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
@@ -13,12 +14,12 @@ using System.Threading.Tasks;
 
 namespace Drypoint.Host.Core.IdentityServer
 {
-    public class CustomProfileService : IProfileService
+    public class ProfileService : IProfileService, ITransientDependency
     {
         private readonly ILogger _logger;
         private readonly IRepository<User, long> _userRepository;
-        public CustomProfileService(
-                ILogger<CustomProfileService> logger,
+        public ProfileService(
+                ILogger<ProfileService> logger,
                 IRepository<User, long> userRepository)
         {
 
@@ -63,7 +64,6 @@ namespace Drypoint.Host.Core.IdentityServer
 
             var user = _userRepository.GetAllIncluding(aa => aa.Claims).FirstOrDefault(aa => aa.Id == Convert.ToInt64(context.Subject.GetSubjectId()));
             context.IsActive = user?.IsActive == true;
-
             return Task.CompletedTask;
         }
     }

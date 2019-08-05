@@ -35,7 +35,9 @@ namespace Drypoint.MVC.Controllers
             var accessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
 
             client.SetBearerToken(accessToken);
-            var response = await client.GetAsync("https://localhost:44332/identity");
+
+
+            var response = await client.GetAsync("https://localhost:44332/api/Demo");
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception(response.ReasonPhrase);

@@ -75,17 +75,45 @@ namespace Drypoint.Host.Core.Configuration
                     {
                         continue;
                     }
-                    if (ltInterface.Any(aa => aa.Name == "I" + item.Name))
+                    if (ltInterface.Any(aa => aa == typeof(ISingletonDependency) || aa == typeof(ITransientDependency)))
                     {
-                        if (ltInterface.Any(aa => aa == typeof(ISingletonDependency)))
+                        //如果类名和接口名之差一个I字母
+                        if (ltInterface.Any(aa => aa.Name == "I" + item.Name))
                         {
-                            Type itface = ltInterface.FirstOrDefault(aa => aa.GetType() != typeof(ISingletonDependency) && aa.Name == "I" + item.Name);
-                            services.TryAddSingleton(itface, item);
+                            if (ltInterface.Any(aa => aa == typeof(ISingletonDependency)))
+                            {
+                                Type itface = ltInterface.FirstOrDefault(aa => aa.GetType() != typeof(ISingletonDependency) && aa.Name == "I" + item.Name);
+                                services.TryAddSingleton(itface, item);
+                            }
+                            else
+                            {
+                                services.TryAddTransient(ltInterface.FirstOrDefault(aa => aa.Name == "I" + item.Name), item);
+                            }
                         }
                         else
                         {
-                            services.AddTransient(ltInterface.FirstOrDefault(aa => aa.Name == "I" + item.Name), item);
+                            //否则默认实现接口中第一个
+                            try
+                            {
+                                if (ltInterface.Any(aa => aa == typeof(ISingletonDependency)))
+                                {
+                                    Type itface = ltInterface.FirstOrDefault(aa => aa.GetType() != typeof(ISingletonDependency));
+                                    services.TryAddSingleton(itface, item);
+                                }
+                                else
+                                {
+                                    services.TryAddTransient(ltInterface.FirstOrDefault(), item);
+                                }
+                            }
+                            finally
+                            {
+
+                            }
                         }
+                    }
+                    else
+                    {
+                        //如果实现类的名称和接口相差太大 ，手动到Startup中注入
                     }
                 }
 

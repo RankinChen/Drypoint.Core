@@ -11,12 +11,13 @@ namespace Drypoint.Host.Controllers
 {
     [ApiExplorerSettings(GroupName ="admin")]
     [Route("api/[controller]")]
-    [ApiController]
     public class Values1Controller : ControllerBase
     {
         public readonly IDemoAppService _demoAppService;
 
-        public Values1Controller(IDemoAppService demoAppService)
+        public Values1Controller(
+            IDemoAppService demoAppService
+            )
         {
             _demoAppService = demoAppService;
         }

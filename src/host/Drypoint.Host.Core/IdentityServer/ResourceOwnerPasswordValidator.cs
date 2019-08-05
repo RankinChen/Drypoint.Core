@@ -15,14 +15,14 @@ using System.Threading.Tasks;
 
 namespace Drypoint.Host.Core.IdentityServer
 {
-    public class CustomResourceOwnerPasswordValidator : IResourceOwnerPasswordValidator, ITransientDependency
+    public class ResourceOwnerPasswordValidator : IResourceOwnerPasswordValidator, ITransientDependency
     {
         private readonly ILogger _logger;
         private readonly IRepository<User, long> _userRepository;
         private readonly ISystemClock _clock;
 
-        public CustomResourceOwnerPasswordValidator(
-            ILogger<CustomResourceOwnerPasswordValidator> logger,
+        public ResourceOwnerPasswordValidator(
+            ILogger<ResourceOwnerPasswordValidator> logger,
             IRepository<User, long> userRepository,
             ISystemClock clock)
         {

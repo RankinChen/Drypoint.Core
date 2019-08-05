@@ -21,6 +21,8 @@ using IdentityServer4.AccessTokenValidation;
 using Microsoft.Extensions.Caching.Distributed;
 using IdentityServer4;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using IdentityServer4.Validation;
+using IdentityServer4.Services;
 
 namespace Drypoint.SSO
 {
@@ -50,9 +52,8 @@ namespace Drypoint.SSO
 
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.TryAddTransient<IAppConfigurationAccessor, AppConfigurationAccessor>();
+            //DI
+            services.AddServiceRegister();
 
             //MVC
             services.AddMvc(options =>
@@ -111,9 +112,12 @@ namespace Drypoint.SSO
               .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources(_appConfiguration))
               .AddInMemoryApiResources(IdentityServerConfig.GetApiResources(_appConfiguration))
               .AddInMemoryClients(IdentityServerConfig.GetClients(_appConfiguration))
-              .AddResourceOwnerValidator<CustomResourceOwnerPasswordValidator>()
-              .AddProfileService<CustomProfileService>()
-              .AddTestUsers(IdentityServerConfig.GetTestUser());
+              //使用内存测试数据身份认证 TODO
+              .AddTestUsers(IdentityServerConfig.GetTestUser())
+              //添加自定义claim
+              .AddProfileService<ProfileService>()
+              //自定义用户密码验证模式
+              .AddResourceOwnerValidator<ResourceOwnerPasswordValidator>();
 
             /*
             services.AddAuthentication()

@@ -27,17 +27,6 @@ namespace Drypoint.Host.Startup
             IdentityModelEventSource.ShowPII = true;
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
-            //访问客户端使用
-            //.AddOpenIdConnect(ProtocolTypes.OpenIdConnect, "OpenID Connect", options =>
-            //{
-            //    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-            //    options.SignOutScheme = IdentityServerConstants.SignoutScheme;
-            //    options.SaveTokens = true;
-            //    //options.TokenValidationParameters.ClockSkew = TimeSpan.FromMinutes(5);
-            //    //options.TokenValidationParameters.RequireExpirationTime = true;
-            //    options.Authority = configuration["IdentityServer:Authority"];
-            //    options.ClientId = "hybrid";
-            //})
             //资源端
             .AddIdentityServerAuthentication(options =>
             {
