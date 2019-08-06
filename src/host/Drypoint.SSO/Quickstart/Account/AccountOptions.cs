@@ -13,6 +13,7 @@ namespace IdentityServer4.Quickstart.UI
         public static TimeSpan RememberMeLoginDuration = TimeSpan.FromDays(30);
 
         public static bool ShowLogoutPrompt = true;
+        //注销后自动重定向
         public static bool AutomaticRedirectAfterSignOut = false;
 
         // specify the Windows authentication scheme being used

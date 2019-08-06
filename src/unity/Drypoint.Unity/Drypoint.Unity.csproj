@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Drypoint.Extensions\Drypoint.Extensions.csproj" />
+    <Folder Include="Extensions\" />
   </ItemGroup>
 
 </Project>

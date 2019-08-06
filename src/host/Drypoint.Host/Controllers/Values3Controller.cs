@@ -1,24 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Drypoint.Application.Authorization.Users;
 using Drypoint.Application.Custom.Demo;
-using Drypoint.EntityFrameworkCore.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
+using Drypoint.Unity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Drypoint.Host.Controllers
 {
-    [ApiExplorerSettings(GroupName = "app")]
+    [ApiExplorerSettings(GroupName = DrypointConsts.AppAPIGroupName)]
     [Route("api/[controller]")]
     [ApiController]
     public class Values3Controller : ControllerBase
     {
         public readonly IDemoAppService _demoAppService;
 
-        public Values3Controller(IDemoAppService demoAppService)
+        public readonly IUserAppService _userAppService;
+
+        public Values3Controller(IDemoAppService demoAppService,
+             IUserAppService userAppService)
         {
             _demoAppService = demoAppService;
+            _userAppService = userAppService;
         }
 
         // GET api/values

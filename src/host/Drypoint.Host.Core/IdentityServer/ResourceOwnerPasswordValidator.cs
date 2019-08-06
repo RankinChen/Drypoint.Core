@@ -15,6 +15,9 @@ using System.Threading.Tasks;
 
 namespace Drypoint.Host.Core.IdentityServer
 {
+    /// <summary>
+    /// 用户名密码验证方式时生效
+    /// </summary>
     public class ResourceOwnerPasswordValidator : IResourceOwnerPasswordValidator, ITransientDependency
     {
         private readonly ILogger _logger;
@@ -34,7 +37,7 @@ namespace Drypoint.Host.Core.IdentityServer
         public Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
         {
             //此处使用context.UserName, context.Password 用户名和密码来与数据库的数据做校验
-            var user = _userRepository.GetAllIncluding(aa=>aa.Claims).FirstOrDefault(aa => (aa.Name == context.UserName || aa.UserName == context.UserName) && aa.Password == context.Password);
+            var user = _userRepository.GetAllIncluding(aa => aa.Claims).FirstOrDefault(aa => (aa.Name == context.UserName || aa.UserName == context.UserName) && aa.Password == context.Password);
             if (user != null)
             {
                 //验证通过返回结果 
@@ -43,9 +46,12 @@ namespace Drypoint.Host.Core.IdentityServer
                 //authTime 授权时间
                 //claims 需要返回的用户身份信息单元 此处应该根据我们从数据库读取到的用户信息 添加Claims 
                 //如果是从数据库中读取角色信息，那么我们应该在此处添加 此处只返回必要的Claim
-                var claims = user.Claims.Select(aa => new Claim(aa.ClaimType,aa.ClaimValue));
-                
-                context.Result = new GrantValidationResult(user.Id.ToString(),OidcConstants.AuthenticationMethods.Password, _clock.UtcNow.UtcDateTime, claims);
+
+                context.Result = new GrantValidationResult(
+                    subject: user.Id.ToString(),
+                    authenticationMethod: OidcConstants.AuthenticationMethods.Password,
+                    authTime: _clock.UtcNow.UtcDateTime,
+                    claims: GetUserClaims(user));
             }
             else
             {
@@ -53,6 +59,23 @@ namespace Drypoint.Host.Core.IdentityServer
                 context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant, "invalid custom credential");
             }
             return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// 可以根据需要设置相应的Claim
+        /// </summary>
+        /// <returns></returns>
+        private Claim[] GetUserClaims(User user)
+        {
+            return new Claim[]
+            {
+                new Claim("UserId", user.Id.ToString()),
+                new Claim(JwtClaimTypes.Name,user.Name),
+                new Claim(JwtClaimTypes.GivenName, user.UserName),
+                new Claim(JwtClaimTypes.FamilyName, user.FullName),
+                new Claim(JwtClaimTypes.Email,user.EmailAddress),
+                new Claim(JwtClaimTypes.Role,"admin")
+            };
         }
     }
 }

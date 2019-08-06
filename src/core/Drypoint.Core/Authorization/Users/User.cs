@@ -5,8 +5,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Drypoint.Core.Common.Auditing;
 using Drypoint.Core.Common;
-using Drypoint.Extensions;
+using Drypoint.Unity;
 using Drypoint.Core.Configuration;
+using Drypoint.Unity.Extensions;
 
 namespace Drypoint.Core.Authorization.Users
 {

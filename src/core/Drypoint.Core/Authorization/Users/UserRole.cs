@@ -4,6 +4,7 @@ using System.Text;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Drypoint.Core.Common.Auditing;
+using Drypoint.Core.Authorization.Roles;
 
 namespace Drypoint.Core.Authorization.Users
 {
@@ -12,7 +13,14 @@ namespace Drypoint.Core.Authorization.Users
     {
         public virtual long UserId { get; set; }
 
+        [ForeignKey("UserId")]
+        public virtual User User { get; set; }
+
         public virtual int RoleId { get; set; }
+
+
+        [ForeignKey("RoleId")]
+        public virtual Role Role { get; set; }
 
         public UserRole()
         {

@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Drypoint.Host.Core.Configuration;
-using Drypoint.Extensions;
+using Drypoint.Unity;
 using Microsoft.AspNetCore.Http;
 using NLog.Extensions.Logging;
 using Drypoint.Host.Core.IdentityServer;

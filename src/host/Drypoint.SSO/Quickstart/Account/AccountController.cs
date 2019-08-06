@@ -20,20 +20,41 @@ using System.Threading.Tasks;
 namespace IdentityServer4.Quickstart.UI
 {
     /// <summary>
-    /// This sample controller implements a typical login/logout/provision workflow for local and external accounts.
-    /// The login service encapsulates the interactions with the user data store. This data store is in-memory only and cannot be used for production!
-    /// The interaction service provides a way for the UI to communicate with identityserver for validation and context retrieval
+    ///此示例控制器为本地和外部帐户实现典型的登录/注销/提供工作流程。
+    ///登录服务封装了与用户数据存储的交互。 此数据存储仅在内存中，不能用于生产！
+    ///交互服务为UI提供了一种与身份服务器通信以进行验证和上下文检索的方法
     /// </summary>
     [SecurityHeaders]
     [AllowAnonymous]
     public class AccountController : Controller
     {
+        /// <summary>
+        /// 测试用户信息
+        /// </summary>
         private readonly TestUserStore _users;
+        /// <summary>
+        /// 提供用户界面使用的服务与IdentityServer进行通信。
+        /// </summary>
         private readonly IIdentityServerInteractionService _interaction;
+        /// <summary>
+        /// 检索客户端配置
+        /// </summary>
         private readonly IClientStore _clientStore;
+        /// <summary>
+        /// 负责管理支持的authenticationSchemes。
+        /// </summary>
         private readonly IAuthenticationSchemeProvider _schemeProvider;
+        /// <summary>
+        /// 事件服务的接口
+        /// </summary>
         private readonly IEventService _events;
 
+        /// <summary>
+        /// 自定义登录
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="button"></param>
+        /// <returns></returns>
         public AccountController(
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
@@ -41,8 +62,8 @@ namespace IdentityServer4.Quickstart.UI
             IEventService events,
             TestUserStore users = null)
         {
-            // if the TestUserStore is not in DI, then we'll just use the global users collection
-            // this is where you would plug in your own custom identity management library (e.g. ASP.NET Identity)
+            //如果TestUserStore不在DI中，那么我们将只使用全局用户集合
+            //这是您插入自己的自定义身份管理库的地方（例如ASP.NET身份）
             _users = users ?? new TestUserStore(TestUsers.Users);
 
             _interaction = interaction;
@@ -52,17 +73,17 @@ namespace IdentityServer4.Quickstart.UI
         }
 
         /// <summary>
-        /// Entry point into the login workflow
+        /// 进入登录工作流程的入口点
         /// </summary>
         [HttpGet]
         public async Task<IActionResult> Login(string returnUrl)
         {
-            // build a model so we know what to show on the login page
+            // 建立一个模型，以便我们知道登录页面上显示的内容
             var vm = await BuildLoginViewModelAsync(returnUrl);
 
             if (vm.IsExternalLoginOnly)
             {
-                // we only have one option for logging in and it's an external provider
+                // 我们只有一个登录选项，它是一个外部提供商
                 return RedirectToAction("Challenge", "External", new { provider = vm.ExternalLoginScheme, returnUrl });
             }
 
@@ -70,30 +91,30 @@ namespace IdentityServer4.Quickstart.UI
         }
 
         /// <summary>
-        /// Handle postback from username/password login
+        /// 用户登录
         /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginInputModel model, string button)
         {
-            // check if we are in the context of an authorization request
+            // 检查我们是否在授权请求的上下文中
             var context = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
 
-            // the user clicked the "cancel" button
+            // 用户点击了“取消”按钮
             if (button != "login")
             {
                 if (context != null)
                 {
-                    // if the user cancels, send a result back into IdentityServer as if they 
-                    // denied the consent (even if this client does not require consent).
-                    // this will send back an access denied OIDC error response to the client.
+                    //如果用户取消，则将结果发送回IdentityServer，就像它们一样
+                    //拒绝同意（即使此客户不需要同意）。
+                    //这将向客户端发回拒绝访问的OIDC错误响应。
                     await _interaction.GrantConsentAsync(context, ConsentResponse.Denied);
 
-                    // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
+                    // 我们可以信任model.ReturnUrl，因为GetAuthorizationContextAsync返回非null
                     if (await _clientStore.IsPkceClientAsync(context.ClientId))
                     {
-                        // if the client is PKCE then we assume it's native, so this change in how to
-                        // return the response is for better UX for the end user.
+                        //如果客户端是PKCE，那么我们假设它是原生的，所以这个改变如何
+                        //返回响应是为了为最终用户提供更好的用户体验。
                         return View("Redirect", new RedirectViewModel { RedirectUrl = model.ReturnUrl });
                     }
 
@@ -101,21 +122,22 @@ namespace IdentityServer4.Quickstart.UI
                 }
                 else
                 {
-                    // since we don't have a valid context, then we just go back to the home page
+                    // 因为我们没有有效的上下文，所以我们只需返回主页
                     return Redirect("~/");
                 }
             }
 
             if (ModelState.IsValid)
             {
-                // validate username/password against in-memory store
+                // 验证内存存储中的用户名/密码
                 if (_users.ValidateCredentials(model.Username, model.Password))
                 {
+                    //按用户名查找用户。
                     var user = _users.FindByUsername(model.Username);
                     await _events.RaiseAsync(new UserLoginSuccessEvent(user.Username, user.SubjectId, user.Username, clientId: context?.ClientId));
 
-                    // only set explicit expiration here if user chooses "remember me". 
-                    // otherwise we rely upon expiration configured in cookie middleware.
+                    //如果用户选择“记住我”，则仅在此设置明确的到期日期。
+                    //否则我们依赖于cookie中间件中配置的到期。
                     AuthenticationProperties props = null;
                     if (AccountOptions.AllowRememberLogin && model.RememberLogin)
                     {
@@ -126,23 +148,23 @@ namespace IdentityServer4.Quickstart.UI
                         };
                     };
 
-                    // issue authentication cookie with subject ID and username
+                    //使用用户名信息发出身份验证Cookie
                     await HttpContext.SignInAsync(user.SubjectId, user.Username, props);
 
                     if (context != null)
                     {
                         if (await _clientStore.IsPkceClientAsync(context.ClientId))
                         {
-                            // if the client is PKCE then we assume it's native, so this change in how to
-                            // return the response is for better UX for the end user.
+                            //如果客户端是PKCE，那么我们假设它是原生的，所以这个改变如何
+                            //返回响应是为了为最终用户提供更好的用户体验。
                             return View("Redirect", new RedirectViewModel { RedirectUrl = model.ReturnUrl });
                         }
 
-                        // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
+                        // 我们可以信任model.ReturnUrl，因为GetAuthorizationContextAsync返回非null
                         return Redirect(model.ReturnUrl);
                     }
-                     
-                    // request for a local page
+
+                    // 重定向到登陆后的页面
                     if (Url.IsLocalUrl(model.ReturnUrl))
                     {
                         return Redirect(model.ReturnUrl);
@@ -153,34 +175,34 @@ namespace IdentityServer4.Quickstart.UI
                     }
                     else
                     {
-                        // user might have clicked on a malicious link - should be logged
+                        // 用户可能已经点击了恶意链接 - 应该被记录
                         throw new Exception("invalid return URL");
                     }
                 }
 
-                await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId:context?.ClientId));
+                await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId: context?.ClientId));
                 ModelState.AddModelError(string.Empty, AccountOptions.InvalidCredentialsErrorMessage);
             }
 
-            // something went wrong, show form with error
+            // 出了错误，显示有错误的信息
             var vm = await BuildLoginViewModelAsync(model);
             return View(vm);
         }
 
-        
+
         /// <summary>
-        /// Show logout page
+        /// 显示注销页面
         /// </summary>
         [HttpGet]
         public async Task<IActionResult> Logout(string logoutId)
         {
-            // build a model so the logout page knows what to display
+            // 构建模型，以便注销页面知道要显示的内容
             var vm = await BuildLogoutViewModelAsync(logoutId);
 
             if (vm.ShowLogoutPrompt == false)
             {
-                // if the request for logout was properly authenticated from IdentityServer, then
-                // we don't need to show the prompt and can just log the user out directly.
+                //如果从IdentityServer正确验证了注销请求，那么
+                //我们不需要显示提示，只能直接将用户注销。
                 return await Logout(vm);
             }
 
@@ -188,33 +210,33 @@ namespace IdentityServer4.Quickstart.UI
         }
 
         /// <summary>
-        /// Handle logout page postback
+        /// 处理注销页面回发
         /// </summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout(LogoutInputModel model)
         {
-            // build a model so the logged out page knows what to display
+            //构建模型，以便注销页面知道要显示的内容
             var vm = await BuildLoggedOutViewModelAsync(model.LogoutId);
 
             if (User?.Identity.IsAuthenticated == true)
             {
-                // delete local authentication cookie
+                // 删除本地认证cookie
                 await HttpContext.SignOutAsync();
 
-                // raise the logout event
+                // 提交注销事件
                 await _events.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
             }
 
-            // check if we need to trigger sign-out at an upstream identity provider
+            // 检查我们是否需要在上游身份提供商处触发注销
             if (vm.TriggerExternalSignout)
             {
-                // build a return URL so the upstream provider will redirect back
-                // to us after the user has logged out. this allows us to then
-                // complete our single sign-out processing.
+                //构建一个返回URL，以便上游提供者重定向回来
+                //在用户退出后向我们发送消息。 这让我们接受了
+                //完成我们的单点登出处理。
                 string url = Url.Action("Logout", new { logoutId = vm.LogoutId });
 
-                // this triggers a redirect to the external provider for sign-out
+                // 这会触发重定向到外部提供程序以进行注销
                 return SignOut(new AuthenticationProperties { RedirectUri = url }, vm.ExternalAuthenticationScheme);
             }
 
@@ -227,9 +249,8 @@ namespace IdentityServer4.Quickstart.UI
             return View();
         }
 
-
         /*****************************************/
-        /* helper APIs for the AccountController */
+        /* AccountController的帮助API */
         /*****************************************/
         private async Task<LoginViewModel> BuildLoginViewModelAsync(string returnUrl)
         {
@@ -238,7 +259,7 @@ namespace IdentityServer4.Quickstart.UI
             {
                 var local = context.IdP == IdentityServer4.IdentityServerConstants.LocalIdentityProvider;
 
-                // this is meant to short circuit the UI and only trigger the one external IdP
+                //这意味着短路UI并且仅触发一个外部IdP
                 var vm = new LoginViewModel
                 {
                     EnableLocalLogin = local,
@@ -305,7 +326,7 @@ namespace IdentityServer4.Quickstart.UI
 
             if (User?.Identity.IsAuthenticated != true)
             {
-                // if the user is not authenticated, then just show logged out page
+                //如果用户未经过身份验证，则只显示已注销的页面
                 vm.ShowLogoutPrompt = false;
                 return vm;
             }
@@ -313,19 +334,19 @@ namespace IdentityServer4.Quickstart.UI
             var context = await _interaction.GetLogoutContextAsync(logoutId);
             if (context?.ShowSignoutPrompt == false)
             {
-                // it's safe to automatically sign-out
+                //自动注销是安全的
                 vm.ShowLogoutPrompt = false;
                 return vm;
             }
 
-            // show the logout prompt. this prevents attacks where the user
-            // is automatically signed out by another malicious web page.
+            //显示注销提示。 这可以防止用户攻击
+            //由另一个恶意网页自动注销。
             return vm;
         }
 
         private async Task<LoggedOutViewModel> BuildLoggedOutViewModelAsync(string logoutId)
         {
-            // get context information (client name, post logout redirect URI and iframe for federated signout)
+            // 获取上下文信息（客户端名称，发布注销重定向URI和联合注销的iframe）
             var logout = await _interaction.GetLogoutContextAsync(logoutId);
 
             var vm = new LoggedOutViewModel
@@ -347,9 +368,9 @@ namespace IdentityServer4.Quickstart.UI
                     {
                         if (vm.LogoutId == null)
                         {
-                            // if there's no current logout context, we need to create one
-                            // this captures necessary info from the current logged in user
-                            // before we signout and redirect away to the external IdP for signout
+                            //如果没有当前的注销上下文，我们需要创建一个
+                            //这会捕获当前登录用户的必要信息
+                            //在我们退出并重定向到外部IdP以进行注销之前
                             vm.LogoutId = await _interaction.CreateLogoutContextAsync();
                         }
 

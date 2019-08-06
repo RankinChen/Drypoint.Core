@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Drypoint.Unity;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
@@ -40,12 +41,30 @@ namespace Drypoint.Host.Core.Configuration
                     };
                 };
                 config.DocumentName = "App";
-                config.ApiGroupNames = new[] { "app" };
+                config.ApiGroupNames = new[] { DrypointConsts.AppAPIGroupName };
             })
-            .AddSwaggerDocument(document =>
+            .AddSwaggerDocument(config =>
             {
-                document.DocumentName = "Admin";
-                document.ApiGroupNames = new[] { "admin" };
+                config.PostProcess = document =>
+                {
+                    document.Info.Version = configuration["SwaggerDoc:Version"];
+                    document.Info.Title = configuration["SwaggerDoc:Title"];
+                    document.Info.Description = configuration["SwaggerDoc:Description"];
+                    document.Info.TermsOfService = configuration["SwaggerDoc:TermsOfService"];
+                    document.Info.Contact = new NSwag.OpenApiContact
+                    {
+                        Name = configuration["SwaggerDoc:Contact:Name"],
+                        Email = configuration["SwaggerDoc:Contact:Email"],
+                        Url = configuration["SwaggerDoc:Contact:Url"]
+                    };
+                    document.Info.License = new NSwag.OpenApiLicense
+                    {
+                        Name = configuration["SwaggerDoc:License:Name"],
+                        Url = configuration["SwaggerDoc:License:Url"]
+                    };
+                };
+                config.DocumentName = "Admin";
+                config.ApiGroupNames = new[] { DrypointConsts.AdminAPIGroupName };
             });
         }
 
@@ -61,8 +80,6 @@ namespace Drypoint.Host.Core.Configuration
 
              });
             //app.UseReDoc();
-
-
         }
     }
 }

@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Drypoint.Host.Core.Configuration;
-using Drypoint.Extensions;
+using Drypoint.Unity;
 using Microsoft.AspNetCore.Http;
 using NLog.Extensions.Logging;
 using Drypoint.Host.Core.IdentityServer;
@@ -21,10 +21,14 @@ using IdentityServer4.AccessTokenValidation;
 using CSRedis;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Redis;
+using Microsoft.IdentityModel.Logging;
+using System.IdentityModel.Tokens.Jwt;
+using AutoMapper;
+using Drypoint.Unity.Extensions;
 
 namespace Drypoint.Host.Startup
 {
-    public partial class Startup
+    public class Startup
     {
         private readonly ILogger _logger;
         private const string LocalCorsPolicyName = "localhost";
@@ -40,14 +44,6 @@ namespace Drypoint.Host.Startup
             _logger.LogInformation($"运行环境:{env.EnvironmentName}");
         }
 
-        /// <summary>
-        /// 配置自定义服务
-        /// </summary>
-        /// <param name="services"></param>
-        partial void ConfigureCustomServices(IServiceCollection services);
-
-        partial void CustomConfigure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory);
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -58,6 +54,12 @@ namespace Drypoint.Host.Startup
             CSRedisClient csredis = new CSRedisClient(_appConfiguration["RedisConnectionString"]);
             services.AddSingleton(csredis);
             services.AddSingleton<IDistributedCache>(new CSRedisCache(csredis));
+
+            //AutoMapper 
+            services.AddAutoMapper(cfg=>
+            {
+                cfg.AddProfile<AutoMapperConfig>();
+            }, AppDomain.CurrentDomain.GetAssemblies());
 
             //MVC
             services.AddMvc(options =>
@@ -127,17 +129,27 @@ namespace Drypoint.Host.Startup
                 });
             }
 
-            try
+            //授权相关:资源端代码
+            IdentityModelEventSource.ShowPII = true;
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+            //资源端
+            .AddIdentityServerAuthentication(options =>
             {
-                _logger.LogWarning("ConfigureCustomServices  Begin...");
-                ConfigureCustomServices(services);
-                _logger.LogWarning("ConfigureCustomServices  End...");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("执行ConfigureCustomServices出现错误", ex);
-            }
+                    //options.JwtValidationClockSkew = TimeSpan.Zero;
+                    options.Authority = _appConfiguration["IdentityServer:Authority"];
+                options.ApiName = _appConfiguration["IdentityServer:ApiName"];
+                options.ApiSecret = _appConfiguration["IdentityServer:ApiSecret"];
+                options.RequireHttpsMetadata = false;
+                    //待测试
+                    //options.JwtBearerEvents = new JwtBearerEvents
+                    //{
+                    //    OnMessageReceived = QueryStringTokenResolver
+                    //};
+                });
 
+            //添加自定义API文档生成(支持文档配置)
+            services.AddCustomSwaggerGen(_appConfiguration, _hostingEnvironment);
             
         }
 
@@ -158,11 +170,11 @@ namespace Drypoint.Host.Startup
             }
 
 
-            if (_appConfiguration["Logging:LogType"].ToLower()=="nlog")
+            if (_appConfiguration["Logging:LogType"].ToLower() == "nlog")
             {
                 loggerFactory.AddNLog();
             }
-            
+
             app.UseCors(LocalCorsPolicyName); //Enable CORS!
             if (bool.Parse(_appConfiguration["App:HttpsRedirection"] ?? "false"))
             {
@@ -170,7 +182,7 @@ namespace Drypoint.Host.Startup
                 //建议开启，以在浏览器显示安全图标
                 app.UseHttpsRedirection();
             }
-            
+
             app.UseStaticFiles();
 
             app.UseSignalR(routes =>
@@ -178,15 +190,22 @@ namespace Drypoint.Host.Startup
                 //routes.MapHub<ChatHub>("/signalr-chat");
             });
 
-            try
+            //授权相关:资源端代码
+            app.UseAuthentication();
+
+            app.UseMvc(routes =>
             {
-                _logger.LogWarning("应用自定义配置...");
-                CustomConfigure(app, env, loggerFactory);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("应用自定义配置出现错误", ex);
-            }
+                routes.MapRoute(
+                    name: "defaultWithArea",
+                    template: "{area}/{controller=Home}/{action=Index}/{id?}");
+
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+            });
+
+            //启用中间件为生成的 Swagger 规范和 Swagger UI 提供服务
+            app.UseCustomSwaggerUI(_appConfiguration);
         }
     }
 }

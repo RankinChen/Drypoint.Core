@@ -4,12 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Drypoint.Application.Custom.Demo;
 using Drypoint.EntityFrameworkCore.EntityFrameworkCore;
+using Drypoint.Unity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Drypoint.Host.Controllers
 {
-    [ApiExplorerSettings(GroupName ="admin")]
+    [ApiExplorerSettings(GroupName = DrypointConsts.AdminAPIGroupName)]
     [Route("api/[controller]")]
     public class Values1Controller : ControllerBase
     {

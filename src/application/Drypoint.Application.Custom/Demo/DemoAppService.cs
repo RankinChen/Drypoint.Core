@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using Drypoint.Application.Custom.Demo.Dto;
 using Drypoint.Application.Services;
-using Drypoint.Application.Services.Dto.Output;
+using Drypoint.Unity.BaseDto.Output;
 using Drypoint.Core.Authorization.Users;
 using Drypoint.EntityFrameworkCore.Repositories;
 using Drypoint.Unity;
@@ -21,15 +21,14 @@ namespace Drypoint.Application.Custom.Demo
     /// <summary>
     /// 
     /// </summary>
-    [ApiExplorerSettings(GroupName = "admin")]
-    [Produces("application/json")]
+    [ApiExplorerSettings(GroupName = DrypointConsts.AdminAPIGroupName)]
     [Route(DrypointConsts.ApiPrefix + "Demo")]
     public class DemoAppService : ApplicationService, IDemoAppService
     {
         private readonly ILogger _logger;
         private readonly IRepository<User, long> _userBaseRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        
+       
 
         /// <summary>
         ///  构造函数
@@ -49,6 +48,7 @@ namespace Drypoint.Application.Custom.Demo
         /// <returns>无参 有返回值</returns>
         [HttpGet]
         [Authorize]
+        [ApiExplorerSettings(GroupName = DrypointConsts.AppAPIGroupName)]
         public ListResultDto<DemoOutputDto> GetAll()
         {
             //ClaimsPrincipal Principal = Thread.CurrentPrincipal as ClaimsPrincipal;
@@ -77,6 +77,10 @@ namespace Drypoint.Application.Custom.Demo
         [HttpGet("{id}")]
         public DemoOutputDto GetById(int id)
         {
+
+
+
+
             var data = _userBaseRepository.GetAll().ToList();
             var resultData = data.Select(aa => new DemoOutputDto
             {
