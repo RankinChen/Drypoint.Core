@@ -40,6 +40,7 @@ namespace Drypoint.Host.Core.Configuration
         private static void AddCommonService(IServiceCollection services)
         {
             AddService(services, "Drypoint.Host.Core");
+            AddService(services, "Drypoint.Unity");
             AddService(services, "Drypoint.Application");
             AddService(services, "Drypoint.Application.Custom");
             AddService(services, "Drypoint.EntityFrameworkCore");

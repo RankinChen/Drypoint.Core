@@ -14,7 +14,7 @@ namespace Drypoint.Core.Authorization.Roles
     {
 
 
-        public virtual int RoleId { get; set; }
+        public virtual long RoleId { get; set; }
 
         [StringLength(256)]
         public virtual string ClaimType { get; set; }

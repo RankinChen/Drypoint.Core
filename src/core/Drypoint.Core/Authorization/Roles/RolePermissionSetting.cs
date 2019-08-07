@@ -6,6 +6,6 @@ namespace Drypoint.Core.Authorization.Roles
 {
     public class RolePermissionSetting : PermissionSetting
     {
-        public virtual int RoleId { get; set; }
+        public virtual long RoleId { get; set; }
     }
 }

@@ -32,7 +32,7 @@ namespace Drypoint.Application.Authorization.Users
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IRepository<User, long> _userRepository;
         private readonly IRepository<UserRole, long> _userRoleRepository;
-        private readonly IRepository<Role, int> _roleRepository;
+        private readonly IRepository<Role, long> _roleRepository;
         private readonly IRepository<RolePermissionSetting, long> _rolePermissionRepository;
         private readonly IRepository<UserPermissionSetting, long> _userPermissionRepository;
 
@@ -43,7 +43,7 @@ namespace Drypoint.Application.Authorization.Users
             IPasswordHasher<User> passwordHasher,
             IRepository<User, long> userRepository,
             IRepository<UserRole, long> userRoleRepository,
-            IRepository<Role, int> roleRepository,
+            IRepository<Role, long> roleRepository,
             IRepository<RolePermissionSetting, long> rolePermissionRepository,
             IRepository<UserPermissionSetting, long> userPermissionRepository
             )
@@ -226,12 +226,18 @@ namespace Drypoint.Application.Authorization.Users
             if (!input.Permission.IsNullOrWhiteSpace())
             {
                 query = from user in query
-                        join ur in _userRoleRepository.GetAll() on user.Id equals ur.UserId into urJoined
+                        join ur in _userRoleRepository.GetAll()
+                            on user.Id equals ur.UserId
+                            into urJoined
                         from ur in urJoined.DefaultIfEmpty()
-                        join up in _userPermissionRepository.GetAll() on new { UserId = user.Id, Name = input.Permission } equals new { up.UserId, up.Name } into upJoined
+                        join up in _userPermissionRepository.GetAll()
+                            on new { UserId = user.Id, Name = input.Permission } equals new { up.UserId, up.Name }
+                            into upJoined
                         from up in upJoined.DefaultIfEmpty()
-                        join rp in _rolePermissionRepository.GetAll() on new { RoleId = ur == null ? 0 : ur.RoleId, Name = input.Permission } equals new { rp.RoleId, rp.Name } into rpJoined
-                        from rp in rpJoined.DefaultIfEmpty()
+                        join rp in _rolePermissionRepository.GetAll()
+                            on new { ur.RoleId, RoleName = input.Permission } equals new { rp.RoleId, RoleName = rp.Name }
+                            into rpJoined
+                            from rp in rpJoined.DefaultIfEmpty()
                         where up != null && up.IsGranted || up == null && rp != null
                         group user by user
                         into userGrouped
@@ -260,34 +266,25 @@ namespace Drypoint.Application.Authorization.Users
 
         private async Task FillRoleNames(List<UserListDto> userListDtos)
         {
-            var userRoles = await _userRoleRepository.GetAll()
-                                    .Where(userRole => userListDtos.Any(aa => aa.Id == userRole.UserId))
-                                    .Select(userRole => userRole).ToListAsync();
+            var userIds = userListDtos.Select(aa => aa.Id).ToList();
 
-            var distinctRoleIds = userRoles.Select(userRole => userRole.RoleId).Distinct();
+            var userRoles = await (from ur in _userRoleRepository.GetAll().Where(aa => userIds.Contains(aa.UserId))
+                                   join r in _roleRepository.GetAll()
+                                   on ur.RoleId equals r.Id
+                                   select new
+                                   {
+                                       ur.UserId,
+                                       ur.RoleId,
+                                       r.DisplayName
+                                   }).ToListAsync();
 
-
-
-            foreach (var user in userListDtos)
+            foreach (var userDto in userListDtos)
             {
-                var rolesOfUser = userRoles.Where(aa => aa.UserId == user.Id).ToList();
-                user.Roles = _mapper.Map<List<UserListRoleDto>>(rolesOfUser);
-            }
-
-            var roleNames = new Dictionary<int, string>();
-            foreach (var roleId in distinctRoleIds)
-            {
-                roleNames[roleId] = userRoles.FirstOrDefault(aa => aa.RoleId == roleId)?.Role.DisplayName;
-            }
-
-            foreach (var userListDto in userListDtos)
-            {
-                foreach (var userListRoleDto in userListDto.Roles)
+                userDto.Roles = userRoles.Where(aa => aa.UserId == userDto.Id).Select(aa => new UserListRoleDto
                 {
-                    userListRoleDto.RoleName = roleNames[userListRoleDto.RoleId];
-                }
-
-                userListDto.Roles = userListDto.Roles.OrderBy(r => r.RoleName).ToList();
+                    RoleId = aa.RoleId,
+                    RoleName = aa.DisplayName,
+                }).ToList();
             }
         }
     }

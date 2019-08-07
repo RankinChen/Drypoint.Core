@@ -9,7 +9,7 @@ using Drypoint.Core.Common;
 namespace Drypoint.Core.Authorization.Roles
 {
     [Table("DrypointRole")]
-    public class Role : FullAuditedEntity<int>
+    public class Role : FullAuditedEntity<long>
     {
         [Required]
         [StringLength(32)]

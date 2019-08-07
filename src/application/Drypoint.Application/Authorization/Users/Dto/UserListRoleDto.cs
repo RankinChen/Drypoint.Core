@@ -8,7 +8,7 @@
         /// <summary>
         /// 角色Id
         /// </summary>
-        public int RoleId { get; set; }
+        public long RoleId { get; set; }
 
         /// <summary>
         /// 角色名称
