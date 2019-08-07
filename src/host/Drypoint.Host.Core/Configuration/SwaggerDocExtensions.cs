@@ -1,10 +1,13 @@
 ﻿using Drypoint.Unity;
+using IdentityModel;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NSwag;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,6 +25,30 @@ namespace Drypoint.Host.Core.Configuration
             //注册Swagger
             services.AddSwaggerDocument(config =>
             {
+                config.AddSecurity("oauth2", new List<string>
+                {
+                    "Drypoint_Host_API",
+                    OidcConstants.StandardScopes.OpenId,
+                    OidcConstants.StandardScopes.Profile,
+                    OidcConstants.StandardScopes.Email,
+                    OidcConstants.StandardScopes.Phone
+
+                }, new OpenApiSecurityScheme()
+                {
+                    Type = OpenApiSecuritySchemeType.OAuth2,
+                    Name = "授权",
+                    Description = "尝试获取授权",
+                    Flow= OpenApiOAuth2Flow.Implicit,
+                    AuthorizationUrl = $"{configuration["IdentityServer:Authority"]}/connect/authorize",
+                    TokenUrl= $"{configuration["IdentityServer:Authority"]}/connect/token",
+                    Scopes = new Dictionary<string, string>() {
+                        { "Drypoint_Host_API", "主要API" },
+                        { "OpenId", "OpenId" },
+                        { "Profile", "Profile" },
+                        { "Email", "Email" },
+                        { "Phone", "Phone" },
+                    }
+                });
                 config.PostProcess = document =>
                 {
                     document.Info.Version = configuration["SwaggerDoc:Version"];

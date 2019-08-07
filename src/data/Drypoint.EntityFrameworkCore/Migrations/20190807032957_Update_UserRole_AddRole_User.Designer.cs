@@ -4,14 +4,16 @@ using Drypoint.EntityFrameworkCore.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Drypoint.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(DrypointDbContext))]
-    partial class DrypointDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190807032957_Update_UserRole_AddRole_User")]
+    partial class Update_UserRole_AddRole_User
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

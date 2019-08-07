@@ -260,15 +260,17 @@ namespace Drypoint.Application.Authorization.Users
 
         private async Task FillRoleNames(List<UserListDto> userListDtos)
         {
-            var userRoles = await _userRoleRepository.GetAll().Include(aa => aa.Role)
-                .Where(userRole => userListDtos.Any(aa => aa.Id == userRole.UserId))
-                .Select(userRole => userRole).ToListAsync();
+            var userRoles = await _userRoleRepository.GetAll()
+                                    .Where(userRole => userListDtos.Any(aa => aa.Id == userRole.UserId))
+                                    .Select(userRole => userRole).ToListAsync();
 
             var distinctRoleIds = userRoles.Select(userRole => userRole.RoleId).Distinct();
 
+
+
             foreach (var user in userListDtos)
             {
-                var rolesOfUser = userRoles.Where(userRole => userRole.UserId == user.Id).ToList();
+                var rolesOfUser = userRoles.Where(aa => aa.UserId == user.Id).ToList();
                 user.Roles = _mapper.Map<List<UserListRoleDto>>(rolesOfUser);
             }
 

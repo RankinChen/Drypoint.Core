@@ -56,7 +56,7 @@ namespace Drypoint.Host.Startup
             services.AddSingleton<IDistributedCache>(new CSRedisCache(csredis));
 
             //AutoMapper 
-            services.AddAutoMapper(cfg=>
+            services.AddAutoMapper(cfg =>
             {
                 cfg.AddProfile<AutoMapperConfig>();
             }, AppDomain.CurrentDomain.GetAssemblies());
@@ -136,21 +136,21 @@ namespace Drypoint.Host.Startup
             //资源端
             .AddIdentityServerAuthentication(options =>
             {
-                    //options.JwtValidationClockSkew = TimeSpan.Zero;
-                    options.Authority = _appConfiguration["IdentityServer:Authority"];
+                //options.JwtValidationClockSkew = TimeSpan.Zero;
+                options.Authority = _appConfiguration["IdentityServer:Authority"];
                 options.ApiName = _appConfiguration["IdentityServer:ApiName"];
                 options.ApiSecret = _appConfiguration["IdentityServer:ApiSecret"];
                 options.RequireHttpsMetadata = false;
-                    //待测试
-                    //options.JwtBearerEvents = new JwtBearerEvents
-                    //{
-                    //    OnMessageReceived = QueryStringTokenResolver
-                    //};
-                });
+                //待测试
+                //options.JwtBearerEvents = new JwtBearerEvents
+                //{
+                //    OnMessageReceived = QueryStringTokenResolver
+                //};
+            });
 
             //添加自定义API文档生成(支持文档配置)
             services.AddCustomSwaggerGen(_appConfiguration, _hostingEnvironment);
-            
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

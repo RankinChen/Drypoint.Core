@@ -63,7 +63,8 @@ namespace Drypoint.Host.Core.IdentityServer
             _logger.LogDebug("IsActive called from: {caller}", context.Caller);
 
             var user = _userRepository.GetAllIncluding(aa => aa.Claims).FirstOrDefault(aa => aa.Id == Convert.ToInt64(context.Subject.GetSubjectId()));
-            context.IsActive = user?.IsActive == true;
+            //context.IsActive = user?.IsActive == true;
+            context.IsActive = true;
             return Task.CompletedTask;
         }
     }
