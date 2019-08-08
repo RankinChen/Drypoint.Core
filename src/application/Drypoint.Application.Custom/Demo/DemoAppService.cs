@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Drypoint.Application.Authorization;
 
 namespace Drypoint.Application.Custom.Demo
 {
@@ -47,8 +48,8 @@ namespace Drypoint.Application.Custom.Demo
         /// </summary>
         /// <returns>无参 有返回值</returns>
         [HttpGet]
-        [Authorize]
         [ApiExplorerSettings(GroupName = DrypointConsts.AppAPIGroupName)]
+        [DrypointAuthorize("aaaaa", "BBBB")]
         public ListResultDto<DemoOutputDto> GetAll()
         {
             //ClaimsPrincipal Principal = Thread.CurrentPrincipal as ClaimsPrincipal;

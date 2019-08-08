@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
-namespace Drypoint.Application.Authorization.Permissions
+namespace Drypoint.Unity.Runtime.Session
 {
     public class UserIdentifier : IUserIdentifier, ITransientDependency
     {

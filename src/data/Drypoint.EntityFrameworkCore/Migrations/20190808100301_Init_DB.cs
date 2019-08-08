@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Drypoint.EntityFrameworkCore.Migrations
 {
-    public partial class InitDB : Migration
+    public partial class Init_DB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -38,7 +38,7 @@ namespace Drypoint.EntityFrameworkCore.Migrations
                 name: "DrypointRole",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<long>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
@@ -124,7 +124,7 @@ namespace Drypoint.EntityFrameworkCore.Migrations
                     Name = table.Column<string>(maxLength: 128, nullable: false),
                     IsGranted = table.Column<bool>(nullable: false),
                     Discriminator = table.Column<string>(nullable: false),
-                    RoleId = table.Column<int>(nullable: true),
+                    RoleId = table.Column<long>(nullable: true),
                     UserId = table.Column<long>(nullable: true)
                 },
                 constraints: table =>
@@ -222,7 +222,7 @@ namespace Drypoint.EntityFrameworkCore.Migrations
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
                     UserId = table.Column<long>(nullable: false),
-                    RoleId = table.Column<int>(nullable: false)
+                    RoleId = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {

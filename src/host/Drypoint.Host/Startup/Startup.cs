@@ -25,6 +25,8 @@ using Microsoft.IdentityModel.Logging;
 using System.IdentityModel.Tokens.Jwt;
 using AutoMapper;
 using Drypoint.Unity.Extensions;
+using Drypoint.Application.Authorization;
+using Drypoint.Host.Core.Authorization;
 
 namespace Drypoint.Host.Startup
 {
@@ -65,6 +67,7 @@ namespace Drypoint.Host.Startup
             services.AddMvc(options =>
             {
                 options.Filters.Add(new CorsAuthorizationFilterFactory(LocalCorsPolicyName));
+                options.Filters.Add(typeof(AsyncAuthorizationFilter));  //添加权限过滤器
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
             .AddJsonOptions(options =>
@@ -75,7 +78,6 @@ namespace Drypoint.Host.Startup
                 options.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver();
                 options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
             });
-
 
             var sbuilder = services.AddSignalR(options => { options.EnableDetailedErrors = true; });
 

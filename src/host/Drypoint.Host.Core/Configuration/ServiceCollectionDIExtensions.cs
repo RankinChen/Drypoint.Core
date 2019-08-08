@@ -1,7 +1,10 @@
-﻿using Drypoint.EntityFrameworkCore.EntityFrameworkCore;
+﻿using Drypoint.Application.Authorization;
+using Drypoint.EntityFrameworkCore.EntityFrameworkCore;
 using Drypoint.EntityFrameworkCore.Repositories;
+using Drypoint.Host.Core.Authorization;
 using Drypoint.Unity.Dependency;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.DependencyInjection;

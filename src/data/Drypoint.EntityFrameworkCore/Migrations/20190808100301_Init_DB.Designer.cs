@@ -10,14 +10,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Drypoint.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(DrypointDbContext))]
-    [Migration("20190807032957_Update_UserRole_AddRole_User")]
-    partial class Update_UserRole_AddRole_User
+    [Migration("20190808100301_Init_DB")]
+    partial class Init_DB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
+                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -88,7 +88,7 @@ namespace Drypoint.EntityFrameworkCore.Migrations
 
             modelBuilder.Entity("Drypoint.Core.Authorization.Roles.Role", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -285,13 +285,11 @@ namespace Drypoint.EntityFrameworkCore.Migrations
 
                     b.Property<long?>("CreatorUserId");
 
-                    b.Property<int>("RoleId");
+                    b.Property<long>("RoleId");
 
                     b.Property<long>("UserId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
 
                     b.HasIndex("UserId");
 
@@ -332,7 +330,7 @@ namespace Drypoint.EntityFrameworkCore.Migrations
                 {
                     b.HasBaseType("Drypoint.Core.Authorization.PermissionSetting");
 
-                    b.Property<int>("RoleId");
+                    b.Property<long>("RoleId");
 
                     b.HasIndex("RoleId");
 
@@ -372,12 +370,7 @@ namespace Drypoint.EntityFrameworkCore.Migrations
 
             modelBuilder.Entity("Drypoint.Core.Authorization.Users.UserRole", b =>
                 {
-                    b.HasOne("Drypoint.Core.Authorization.Roles.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Drypoint.Core.Authorization.Users.User", "User")
+                    b.HasOne("Drypoint.Core.Authorization.Users.User")
                         .WithMany("Roles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);

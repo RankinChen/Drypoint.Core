@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Drypoint.Application.Authorization.Permissions
+namespace Drypoint.Unity.Runtime.Session
 {
     public interface IUserIdentifier
     {
