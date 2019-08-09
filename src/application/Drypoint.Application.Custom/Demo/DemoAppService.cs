@@ -49,6 +49,7 @@ namespace Drypoint.Application.Custom.Demo
         /// <returns>无参 有返回值</returns>
         [HttpGet]
         [ApiExplorerSettings(GroupName = DrypointConsts.AppAPIGroupName)]
+        [Authorize()]
         [DrypointAuthorize("aaaaa", "BBBB")]
         public ListResultDto<DemoOutputDto> GetAll()
         {

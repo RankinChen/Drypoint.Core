@@ -81,7 +81,7 @@ namespace Drypoint.SSO
                         .AllowCredentials();
                 });
             });
-            
+
             //设置https重定向端口
             services.AddHttpsRedirection(options =>
             {

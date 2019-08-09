@@ -52,11 +52,11 @@ namespace Drypoint.MVC
                 .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
                 {
                     options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.Authority = "https://localhost:44333";
+                    options.Authority = Configuration["IdentityServer:Authority"];
                     options.RequireHttpsMetadata = false;
 
-                    options.ClientId = "hybrid client";
-                    options.ClientSecret = "hybrid secret";
+                    options.ClientId = Configuration["IdentityServer:ClientId"];
+                    options.ClientSecret = Configuration["IdentityServer:ClientSecret"];
                     options.SaveTokens = true;
                     options.ResponseType = "code id_token";
 
@@ -67,7 +67,7 @@ namespace Drypoint.MVC
                     options.Scope.Add(OidcConstants.StandardScopes.Profile);
                     options.Scope.Add(OidcConstants.StandardScopes.Email);
                     options.Scope.Add(OidcConstants.StandardScopes.Phone);
-
+                    
                     //options.Scope.Add(OidcConstants.StandardScopes.OfflineAccess);
 
                     //// 集合里的东西 都是要被过滤掉的属性，nbf amr exp...

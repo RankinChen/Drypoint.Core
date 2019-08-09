@@ -49,8 +49,7 @@ namespace Drypoint.Host.Core.Authorization
             {
                 await _authorizationHelper.AuthorizeAsync(
                     context.ActionDescriptor.GetMethodInfo(),
-                    context.ActionDescriptor.GetMethodInfo().DeclaringType
-                );
+                    context.ActionDescriptor.GetMethodInfo().DeclaringType);
             }
             catch (AuthorizationException ex)
             {

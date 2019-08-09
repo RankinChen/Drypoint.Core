@@ -35,7 +35,7 @@ namespace Drypoint.Host.Core.Authorization
 
             foreach (var authorizeAttribute in authorizeAttributes)
             {
-               await _permissionChecker.IsGrantedAsync(authorizeAttribute.RequireAllPermissions, authorizeAttribute.Permissions);
+               await _permissionChecker.AuthorizeAsync(authorizeAttribute.RequireAllPermissions, authorizeAttribute.Permissions);
             }
         }
 

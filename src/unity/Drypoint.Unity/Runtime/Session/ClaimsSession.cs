@@ -1,4 +1,5 @@
 ﻿using Drypoint.Unity.Dependency;
+using IdentityModel;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,10 @@ namespace Drypoint.Unity.Runtime.Session
         {
             get
             {
-                var userIdClaim = PrincipalAccessor.Principal?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid);
+
+                //var userIdClaim = PrincipalAccessor.Principal?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid);
+                var userIdClaim = PrincipalAccessor.Principal?.Claims.FirstOrDefault(c => c.Type == JwtClaimTypes.Subject);
+                
                 if (string.IsNullOrEmpty(userIdClaim?.Value))
                 {
                     return null;
@@ -44,7 +48,7 @@ namespace Drypoint.Unity.Runtime.Session
         {
             get
             {
-                var userIdClaim = PrincipalAccessor.Principal?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
+                var userIdClaim = PrincipalAccessor.Principal?.Claims.FirstOrDefault(c => c.Type == JwtClaimTypes.Role);
                 if (string.IsNullOrEmpty(userIdClaim?.Value))
                 {
                     return null;

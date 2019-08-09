@@ -19,5 +19,7 @@ namespace Drypoint.Application.Authorization.Permissions
         Task<bool> IsGrantedAsync(IUserIdentifier userIdentifier, string permissionName);
 
 
+        Task AuthorizeAsync(bool requireAll = true, params string[] permissionNames);
+
     }
 }

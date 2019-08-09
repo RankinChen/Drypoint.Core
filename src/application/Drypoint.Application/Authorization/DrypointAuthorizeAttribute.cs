@@ -14,7 +14,7 @@ namespace Drypoint.Application.Authorization
 
         /// <summary>
         /// 如果为true 则所有权限都满足才能访问，
-        /// 如果为false 则满足最后一个权限即可
+        /// 如果为false 则满足个权限即可
         /// 默认为false
         /// </summary>
         public bool RequireAllPermissions { get; set; }

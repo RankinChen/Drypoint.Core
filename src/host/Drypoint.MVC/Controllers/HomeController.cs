@@ -38,10 +38,10 @@ namespace Drypoint.MVC.Controllers
 
 
             var response = await client.GetAsync("https://localhost:44332/api/Demo");
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new Exception(response.ReasonPhrase);
-            }
+            //if (!response.IsSuccessStatusCode)
+            //{
+            //    throw new Exception(response.ReasonPhrase);
+            //}
 
             var content = await response.Content.ReadAsStringAsync();
 

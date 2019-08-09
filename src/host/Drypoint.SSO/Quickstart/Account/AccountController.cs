@@ -146,7 +146,15 @@ namespace IdentityServer4.Quickstart.UI
                             IsPersistent = true,
                             ExpiresUtc = DateTimeOffset.UtcNow.Add(AccountOptions.RememberMeLoginDuration)
                         };
-                    };
+                    }
+                    else
+                    {
+                        props = new AuthenticationProperties
+                        {
+                            IsPersistent = false,
+                            ExpiresUtc = DateTimeOffset.UtcNow.Add(AccountOptions.RememberMeLoginDuration)
+                        };
+                    }
 
                     //使用用户名信息发出身份验证Cookie
                     await HttpContext.SignInAsync(user.SubjectId, user.Username, props);
