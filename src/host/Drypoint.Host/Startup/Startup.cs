@@ -195,6 +195,9 @@ namespace Drypoint.Host.Startup
             //授权相关:资源端代码
             app.UseAuthentication();
 
+            //启用中间件为生成的 Swagger 规范和 Swagger UI 提供服务
+            app.UseCustomSwaggerUI(_appConfiguration);
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -206,8 +209,6 @@ namespace Drypoint.Host.Startup
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            //启用中间件为生成的 Swagger 规范和 Swagger UI 提供服务
-            app.UseCustomSwaggerUI(_appConfiguration);
         }
     }
 }

@@ -8,8 +8,11 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NSwag;
+using NSwag.AspNetCore;
+using NSwag.Generation.Processors.Security;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Drypoint.Host.Core.Configuration
@@ -25,48 +28,49 @@ namespace Drypoint.Host.Core.Configuration
             //注册Swagger
             services.AddSwaggerDocument(config =>
             {
-                config.AddSecurity("oauth2", new List<string>
-                {
-                    "Drypoint_Host_API",
-                    OidcConstants.StandardScopes.OpenId,
-                    OidcConstants.StandardScopes.Profile,
-                    OidcConstants.StandardScopes.Email,
-                    OidcConstants.StandardScopes.Phone
-
-                }, new OpenApiSecurityScheme()
+                config.AddSecurity("bearer", Enumerable.Empty<string>(), new OpenApiSecurityScheme()
                 {
                     Type = OpenApiSecuritySchemeType.OAuth2,
                     Name = "授权",
                     Description = "尝试获取授权",
-                    Flow= OpenApiOAuth2Flow.Implicit,
-                    AuthorizationUrl = $"{configuration["IdentityServer:Authority"]}/connect/authorize",
-                    TokenUrl= $"{configuration["IdentityServer:Authority"]}/connect/token",
-                    Scopes = new Dictionary<string, string>() {
-                        { "Drypoint_Host_API", "主要API" },
-                        { "OpenId", "OpenId" },
-                        { "Profile", "Profile" },
-                        { "Email", "Email" },
-                        { "Phone", "Phone" },
+                    //Flow = OpenApiOAuth2Flow.AccessCode,
+                    //AuthorizationUrl = $"{configuration["IdentityServer:Authority"]}/connect/authorize",
+                    //TokenUrl = $"{configuration["IdentityServer:Authority"]}/connect/token",
+                    Flows = new OpenApiOAuthFlows()
+                    {
+                        AuthorizationCode = new OpenApiOAuthFlow()
+                        {
+                            Scopes = new Dictionary<string, string>
+                            {
+                                { "Drypoint_Host_API", "主要API" },
+                                { "openid", "openid" },
+                                { "profile", "profile" },
+                                { "email", "Email" },
+                                { "phone", "Phone" },
+                            },
+                            AuthorizationUrl = $"{configuration["IdentityServer:Authority"]}/connect/authorize",
+                            TokenUrl = $"{configuration["IdentityServer:Authority"]}/connect/token"
+                        },
                     }
                 });
-                config.PostProcess = document =>
-                {
-                    document.Info.Version = configuration["SwaggerDoc:Version"];
-                    document.Info.Title = configuration["SwaggerDoc:Title"];
-                    document.Info.Description = configuration["SwaggerDoc:Description"];
-                    document.Info.TermsOfService = configuration["SwaggerDoc:TermsOfService"];
-                    document.Info.Contact = new NSwag.OpenApiContact
-                    {
-                        Name = configuration["SwaggerDoc:Contact:Name"],
-                        Email = configuration["SwaggerDoc:Contact:Email"],
-                        Url = configuration["SwaggerDoc:Contact:Url"]
+                config.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("bearer"));
+                config.PostProcess = document =>{
+                        document.Info.Version = configuration["SwaggerDoc:Version"];
+                        document.Info.Title = configuration["SwaggerDoc:Title"];
+                        document.Info.Description = configuration["SwaggerDoc:Description"];
+                        document.Info.TermsOfService = configuration["SwaggerDoc:TermsOfService"];
+                        document.Info.Contact = new NSwag.OpenApiContact
+                        {
+                            Name = configuration["SwaggerDoc:Contact:Name"],
+                            Email = configuration["SwaggerDoc:Contact:Email"],
+                            Url = configuration["SwaggerDoc:Contact:Url"]
+                        };
+                        document.Info.License = new NSwag.OpenApiLicense
+                        {
+                            Name = configuration["SwaggerDoc:License:Name"],
+                            Url = configuration["SwaggerDoc:License:Url"]
+                        };
                     };
-                    document.Info.License = new NSwag.OpenApiLicense
-                    {
-                        Name = configuration["SwaggerDoc:License:Name"],
-                        Url = configuration["SwaggerDoc:License:Url"]
-                    };
-                };
                 config.DocumentName = "App";
                 config.ApiGroupNames = new[] { DrypointConsts.AppAPIGroupName };
             })
@@ -101,12 +105,21 @@ namespace Drypoint.Host.Core.Configuration
         public static void UseCustomSwaggerUI(this IApplicationBuilder app, IConfiguration configuration)
         {
             app.UseOpenApi();
-            //以下两种 二选一
             app.UseSwaggerUi3(config =>
              {
+                 config.OAuth2Client = new OAuth2ClientSettings
+                 {
+                     ClientId = "hybrid client",
+                     ClientSecret = "hybrid secret",
+                     AppName = "API 端测试授权",
+                     //在授权认证的时候地址栏后面添加请求参数 
+                     AdditionalQueryStringParameters = {
+                         //{"response_type","code id_token" },
+                         //{ "redirect_uri","http://localhost:7000/signin-oidc"}
+                     }
 
+                 };
              });
-            //app.UseReDoc();
         }
     }
 }
