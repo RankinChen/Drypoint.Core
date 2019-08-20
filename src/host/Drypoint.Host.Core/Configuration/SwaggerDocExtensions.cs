@@ -33,9 +33,6 @@ namespace Drypoint.Host.Core.Configuration
                     Type = OpenApiSecuritySchemeType.OAuth2,
                     Name = "授权",
                     Description = "尝试获取授权",
-                    //Flow = OpenApiOAuth2Flow.AccessCode,
-                    //AuthorizationUrl = $"{configuration["IdentityServer:Authority"]}/connect/authorize",
-                    //TokenUrl = $"{configuration["IdentityServer:Authority"]}/connect/token",
                     Flows = new OpenApiOAuthFlows()
                     {
                         AuthorizationCode = new OpenApiOAuthFlow()
@@ -109,8 +106,8 @@ namespace Drypoint.Host.Core.Configuration
              {
                  config.OAuth2Client = new OAuth2ClientSettings
                  {
-                     ClientId = "hybrid client",
-                     ClientSecret = "hybrid secret",
+                     ClientId = configuration["IdentityServer:Client:ClientId"],
+                     ClientSecret = configuration["IdentityServer:Client:ClientSecret"],
                      AppName = "API 端测试授权",
                      //在授权认证的时候地址栏后面添加请求参数 
                      AdditionalQueryStringParameters = {

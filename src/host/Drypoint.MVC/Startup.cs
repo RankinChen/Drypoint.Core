@@ -61,7 +61,6 @@ namespace Drypoint.MVC
                     options.ResponseType = "code id_token";
 
                     options.Scope.Clear();
-
                     options.Scope.Add("Drypoint_Host_API");
                     options.Scope.Add(OidcConstants.StandardScopes.OpenId);
                     options.Scope.Add(OidcConstants.StandardScopes.Profile);

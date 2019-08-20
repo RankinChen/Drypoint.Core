@@ -27,6 +27,7 @@ using AutoMapper;
 using Drypoint.Unity.Extensions;
 using Drypoint.Application.Authorization;
 using Drypoint.Host.Core.Authorization;
+using IdentityModel;
 
 namespace Drypoint.Host.Startup
 {
@@ -143,6 +144,7 @@ namespace Drypoint.Host.Startup
                 options.ApiName = _appConfiguration["IdentityServer:ApiName"];
                 options.ApiSecret = _appConfiguration["IdentityServer:ApiSecret"];
                 options.RequireHttpsMetadata = false;
+                options.JwtValidationClockSkew = TimeSpan.FromSeconds(0);  //验证token间隔时间
                 //待测试
                 //options.JwtBearerEvents = new JwtBearerEvents
                 //{

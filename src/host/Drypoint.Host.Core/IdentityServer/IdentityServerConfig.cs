@@ -91,6 +91,11 @@ namespace Drypoint.Host.Core.IdentityServer
                 {
                     client.AllowOfflineAccess = allowOfflineAccess;
                 }
+                if (bool.TryParse(child["AlwaysIncludeUserClaimsInIdToken"], out bool alwaysIncludeUserClaimsInIdToken))
+                {
+                    client.AlwaysIncludeUserClaimsInIdToken = alwaysIncludeUserClaimsInIdToken;
+                }
+                
 
                 client.AccessTokenLifetime = int.TryParse(child["AccessTokenLifetime"], out int accessTokenLifetime) ? accessTokenLifetime : 60 * 30;
 

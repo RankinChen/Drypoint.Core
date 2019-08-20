@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Drypoint.Unity", "src\unity
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Drypoint.SSO", "src\host\Drypoint.SSO\Drypoint.SSO.csproj", "{BBD5C364-FD77-4571-A090-413F4361BFDD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Drypoint.MVC(仅用于调试IDS4)", "src\host\Drypoint.MVC\Drypoint.MVC(仅用于调试IDS4).csproj", "{322E73BB-C0AA-4082-94B9-0452B5F8DA7F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Drypoint.MVC(仅用于调试IDS4可删除)", "src\host\Drypoint.MVC\Drypoint.MVC(仅用于调试IDS4可删除).csproj", "{322E73BB-C0AA-4082-94B9-0452B5F8DA7F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
