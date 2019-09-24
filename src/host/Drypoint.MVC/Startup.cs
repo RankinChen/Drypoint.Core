@@ -66,7 +66,7 @@ namespace Drypoint.MVC
                     options.Scope.Add(OidcConstants.StandardScopes.Profile);
                     options.Scope.Add(OidcConstants.StandardScopes.Email);
                     options.Scope.Add(OidcConstants.StandardScopes.Phone);
-                    
+
                     //options.Scope.Add(OidcConstants.StandardScopes.OfflineAccess);
 
                     //// 集合里的东西 都是要被过滤掉的属性，nbf amr exp...
@@ -85,6 +85,17 @@ namespace Drypoint.MVC
                     //    NameClaimType = JwtClaimTypes.Name,
                     //    RoleClaimType = JwtClaimTypes.Role
                     //};
+
+                    options.Events = new OpenIdConnectEvents()
+                    {
+                        //授权被用户拒绝之后友好提示页面
+                        OnRemoteFailure = context => {
+                            //跳到错误指示页面
+                            context.Response.Redirect("/");
+                            context.HandleResponse();
+                            return Task.FromResult(0);
+                        }
+                    };
                 });
 
             services.AddAuthorization(options =>
