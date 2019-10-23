@@ -78,10 +78,6 @@ namespace Drypoint.Application.Custom.Demo
         [HttpGet("{id}")]
         public DemoOutputDto GetById(int id)
         {
-
-
-
-
             var data = _userBaseRepository.GetAll().ToList();
             var resultData = data.Select(aa => new DemoOutputDto
             {
