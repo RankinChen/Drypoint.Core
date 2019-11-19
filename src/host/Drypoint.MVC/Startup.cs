@@ -30,6 +30,8 @@ namespace Drypoint.MVC
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpClient();
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 options.CheckConsentNeeded = context => true;
@@ -57,8 +59,9 @@ namespace Drypoint.MVC
 
                     options.ClientId = Configuration["IdentityServer:ClientId"];
                     options.ClientSecret = Configuration["IdentityServer:ClientSecret"];
-                    options.SaveTokens = true;
-                    options.ResponseType = "code id_token";
+                    options.SaveTokens = true; //取得的token持久化到Cookie
+                    //options.ResponseType = "code id_token ";
+                    //options.ResponseType = "code id_token token"; //既获取id_token 又获取access_token
 
                     options.Scope.Clear();
                     options.Scope.Add("Drypoint_Host_API");
