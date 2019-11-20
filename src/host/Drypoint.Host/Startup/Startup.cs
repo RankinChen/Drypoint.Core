@@ -28,6 +28,7 @@ using Drypoint.Unity.Extensions;
 using Drypoint.Application.Authorization;
 using Drypoint.Host.Core.Authorization;
 using IdentityModel;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Drypoint.Host.Startup
 {
@@ -135,6 +136,13 @@ namespace Drypoint.Host.Startup
             //授权相关:资源端代码
             IdentityModelEventSource.ShowPII = true;
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            
+            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            //        .AddJwtBearer(options =>
+            //         {
+            //             // .........
+            //         });
+            //TODO 老写法？用上面的？
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
             //资源端
             .AddIdentityServerAuthentication(options =>
