@@ -60,7 +60,7 @@ namespace Drypoint.MVC
                     options.ClientId = Configuration["IdentityServer:ClientId"];
                     options.ClientSecret = Configuration["IdentityServer:ClientSecret"];
                     options.SaveTokens = true; //取得的token持久化到Cookie
-                    //options.ResponseType = "code id_token ";
+                    options.ResponseType = "code id_token";
                     //options.ResponseType = "code id_token token"; //既获取id_token 又获取access_token
 
                     options.Scope.Clear();
