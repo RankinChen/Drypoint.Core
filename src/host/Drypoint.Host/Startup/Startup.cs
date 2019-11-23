@@ -136,11 +136,13 @@ namespace Drypoint.Host.Startup
             //授权相关:资源端代码
             IdentityModelEventSource.ShowPII = true;
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            
+
             //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             //        .AddJwtBearer(options =>
             //         {
-            //             // .........
+            //             options.Authority = _appConfiguration["IdentityServer:Authority"];
+            //             options.RequireHttpsMetadata = false;
+            //             options.Audience = _appConfiguration["IdentityServer:ApiName"];
             //         });
             //TODO 老写法？用上面的？
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
