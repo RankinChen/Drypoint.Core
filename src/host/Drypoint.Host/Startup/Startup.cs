@@ -136,7 +136,7 @@ namespace Drypoint.Host.Startup
             //授权相关:资源端代码
             IdentityModelEventSource.ShowPII = true;
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-
+            //客户端设置 AccessTokenType为JWT(默认)写法
             //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             //        .AddJwtBearer(options =>
             //         {
@@ -144,7 +144,7 @@ namespace Drypoint.Host.Startup
             //             options.RequireHttpsMetadata = false;
             //             options.Audience = _appConfiguration["IdentityServer:ApiName"];
             //         });
-            //TODO 老写法？用上面的？
+            //客户端设置 AccessTokenType为Reference时需要API提供认证身份认证
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
             //资源端
             .AddIdentityServerAuthentication(options =>
