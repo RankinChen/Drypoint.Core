@@ -42,7 +42,7 @@ namespace Drypoint.EntityFrameworkCore.EntityFrameworkCore
 
         public virtual DbSet<AuditLog> AuditLogs { get; set; }
 
-        
+
         private static MethodInfo ConfigureGlobalFiltersMethodInfo = typeof(DrypointDbContext).GetMethod(nameof(ConfigureGlobalFilters), BindingFlags.Instance | BindingFlags.NonPublic);
         public DrypointDbContext(DbContextOptions<DrypointDbContext> options)
             : base(options)
@@ -107,14 +107,7 @@ namespace Drypoint.EntityFrameworkCore.EntityFrameworkCore
                 var filterExpression = CreateFilterExpression<TEntity>();
                 if (filterExpression != null)
                 {
-                    if (entityType.IsQueryType)
-                    {
-                        modelBuilder.Query<TEntity>().HasQueryFilter(filterExpression);
-                    }
-                    else
-                    {
-                        modelBuilder.Entity<TEntity>().HasQueryFilter(filterExpression);
-                    }
+                    modelBuilder.Entity<TEntity>().HasQueryFilter(filterExpression);
                 }
             }
         }

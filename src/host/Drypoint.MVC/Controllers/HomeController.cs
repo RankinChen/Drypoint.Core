@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Drypoint.MVC.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Net.Http;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication;
 using System.Net;
 using IdentityModel.Client;
