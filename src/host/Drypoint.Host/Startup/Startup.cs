@@ -1,21 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Cors.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Drypoint.Host.Core.Configuration;
-using Drypoint.Unity;
 using Microsoft.AspNetCore.Http;
 using NLog.Extensions.Logging;
-using Drypoint.Host.Core.IdentityServer;
 using Newtonsoft.Json;
 using IdentityServer4.AccessTokenValidation;
 using CSRedis;
@@ -25,10 +17,7 @@ using Microsoft.IdentityModel.Logging;
 using System.IdentityModel.Tokens.Jwt;
 using AutoMapper;
 using Drypoint.Unity.Extensions;
-using Drypoint.Application.Authorization;
 using Drypoint.Host.Core.Authorization;
-using IdentityModel;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Drypoint.Host.Startup
 {
@@ -68,18 +57,10 @@ namespace Drypoint.Host.Startup
             //MVC
             services.AddMvc(options =>
             {
-                options.Filters.Add(new CorsAuthorizationFilterFactory(LocalCorsPolicyName));
+                //options.Filters.Add(new CorsAuthorizationFilterFactory(LocalCorsPolicyName));
                 options.Filters.Add(typeof(AsyncAuthorizationFilter));  //添加权限过滤器
             })
-            .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-            .AddJsonOptions(options =>
-            {
-                //忽略循环引用
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                //不使用驼峰样式的key,按照Model中的属性名进行命名
-                options.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver();
-                options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
-            });
+            .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             var sbuilder = services.AddSignalR(options => { options.EnableDetailedErrors = true; });
 

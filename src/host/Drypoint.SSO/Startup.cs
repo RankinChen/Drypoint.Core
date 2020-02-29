@@ -1,28 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Cors.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Drypoint.Host.Core.Configuration;
-using Drypoint.Unity;
 using Microsoft.AspNetCore.Http;
-using NLog.Extensions.Logging;
 using Drypoint.Host.Core.IdentityServer;
-using Newtonsoft.Json;
-using IdentityServer4.AccessTokenValidation;
-using Microsoft.Extensions.Caching.Distributed;
-using IdentityServer4;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using IdentityServer4.Validation;
-using IdentityServer4.Services;
+using System.Net;
+using Microsoft.AspNetCore.Diagnostics;
 
 namespace Drypoint.SSO
 {
@@ -31,15 +17,15 @@ namespace Drypoint.SSO
         private readonly ILogger _logger;
         private const string LocalCorsPolicyName = "localhost";
 
-        private readonly IConfigurationRoot _appConfiguration;
-        private readonly IHostingEnvironment _hostingEnvironment;
+        public IConfiguration Configuration { get; }
+        private IWebHostEnvironment Environment { get; }
 
-        public Startup(IHostingEnvironment env, ILogger<Startup> logger)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment, ILogger<Startup> logger)
         {
-            _hostingEnvironment = env;
-            _appConfiguration = env.GetAppConfiguration();
+            Environment = environment;
+            Configuration = configuration;
             _logger = logger;
-            _logger.LogInformation($"运行环境:{env.EnvironmentName}");
+            _logger.LogInformation($"运行环境:{Environment.EnvironmentName}");
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -48,19 +34,12 @@ namespace Drypoint.SSO
             services.AddServiceRegister();
 
             //MVC
+            services.AddMvc(option => option.EnableEndpointRouting = false).AddNewtonsoftJson();
             services.AddMvc(options =>
             {
-                options.Filters.Add(new CorsAuthorizationFilterFactory(LocalCorsPolicyName));
+                //options.Filters.Add(new CorsAuthorizationFilterFactory(LocalCorsPolicyName));
             })
-            .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-            .AddJsonOptions(options =>
-            {
-                //忽略循环引用
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                //不使用驼峰样式的key,按照Model中的属性名进行命名
-                options.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver();
-                options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
-            });
+            .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             //Configure CORS for APP
             services.AddCors(options =>
@@ -101,9 +80,9 @@ namespace Drypoint.SSO
                 //};
             }).AddDeveloperSigningCredential()        //使用演示签名证书
             //.AddSigningCredential(new X509Certificate2(Path.Combine(AppContext.BaseDirectory, Configuration["Certs:Path"]), Configuration["Certs:Pwd"]))
-              .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources(_appConfiguration))
-              .AddInMemoryApiResources(IdentityServerConfig.GetApiResources(_appConfiguration))
-              .AddInMemoryClients(IdentityServerConfig.GetClients(_appConfiguration))
+              .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources(Configuration))
+              .AddInMemoryApiResources(IdentityServerConfig.GetApiResources(Configuration))
+              .AddInMemoryClients(IdentityServerConfig.GetClients(Configuration))
               //使用内存测试数据身份认证 TODO
               .AddTestUsers(IdentityServerConfig.GetTestUser())
               //添加自定义claim
@@ -128,22 +107,31 @@ namespace Drypoint.SSO
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
-
-            if (env.IsDevelopment())
+            if (env.EnvironmentName == "Development")
             {
                 app.UseDeveloperExceptionPage();
             }
             else
             {
-                app.UseHsts();
-            }
-
-
-            if (_appConfiguration["Logging:LogType"].ToLower() == "nlog")
-            {
-                loggerFactory.AddNLog();
+                app.UseExceptionHandler(builder =>
+                {
+                    builder.Run(async context =>
+                    {
+                        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                        context.Response.ContentType = "text/html";
+                        var ex = context.Features.Get<IExceptionHandlerFeature>();
+                        if (ex != null)
+                        {
+                            var err = $"<h1>Error: {ex.Error.Message}</h1>{ex.Error.StackTrace}";
+                            context.Response.Headers.Add("application-error", ex.Error.Message);
+                            context.Response.Headers.Add("access-control-expose-headers", "application-error");
+                            context.Response.Headers.Add("access-control-allow-origin", "*");
+                            await context.Response.WriteAsync(err).ConfigureAwait(false);
+                        }
+                    });
+                });// this will add the global exception handle for production evironment.
             }
 
             app.UseCors(LocalCorsPolicyName); //Enable CORS!
@@ -157,7 +145,8 @@ namespace Drypoint.SSO
 
             app.UseStaticFiles();
 
-            app.UseMvcWithDefaultRoute();
+            //app.UseMvcWithDefaultRoute();
+            app.UseMvc();
         }
     }
 }

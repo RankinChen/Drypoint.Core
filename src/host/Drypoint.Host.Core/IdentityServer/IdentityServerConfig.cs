@@ -12,7 +12,7 @@ namespace Drypoint.Host.Core.IdentityServer
         /// api资源
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<ApiResource> GetApiResources(IConfigurationRoot configuration)
+        public static IEnumerable<ApiResource> GetApiResources(IConfiguration configuration)
         {
 
             var apiResources = new List<ApiResource>();
@@ -38,7 +38,7 @@ namespace Drypoint.Host.Core.IdentityServer
         /// 身份资源范围
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<IdentityResource> GetIdentityResources(IConfigurationRoot configuration)
+        public static IEnumerable<IdentityResource> GetIdentityResources(IConfiguration configuration)
         {
             //IdentityServer支持的一些标准OpenID Connect定义的范围
             return new List<IdentityResource>
@@ -59,7 +59,7 @@ namespace Drypoint.Host.Core.IdentityServer
         /// <summary>
         /// 客户端
         /// </summary>
-        public static IEnumerable<Client> GetClients(IConfigurationRoot configuration)
+        public static IEnumerable<Client> GetClients(IConfiguration configuration)
         {
             var clients = new List<Client>();
 
