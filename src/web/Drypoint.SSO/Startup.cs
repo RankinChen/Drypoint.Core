@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Drypoint.Host.Core.Configuration;
+using Drypoint.Core.Configuration;
 using Microsoft.AspNetCore.Http;
-using Drypoint.Host.Core.IdentityServer;
+using Drypoint.Core.IdentityServer;
 using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
 

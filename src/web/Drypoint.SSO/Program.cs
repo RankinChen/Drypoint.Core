@@ -1,61 +1,65 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore;
 using NLog.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Drypoint.SSO
 {
     public class Program
     {
-        public static void Main(string[] args) => CreateHostBuilder(args).Build().Run();
+        private static string _environmentName;
 
-        public static IWebHostBuilder CreateHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseKestrel((context, opt) =>
+        public static void Main(string[] args)
+        {
+            CreateHostBuilder(args).Build().Run();
+        }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+            //.ConfigureHostConfiguration(configHost =>
+            //{
+            //    configHost.SetBasePath(Directory.GetCurrentDirectory());
+            //    configHost.AddJsonFile("hostsettings.json", optional: true);
+            //    configHost.AddEnvironmentVariables(prefix: "DOTNET_");
+            //    configHost.AddCommandLine(args);
+            //})
+            .UseContentRoot(Directory.GetCurrentDirectory())
+            .ConfigureLogging((hostingContext, logBuilder) =>
+            {
+                _environmentName = hostingContext.HostingEnvironment.EnvironmentName;
+                logBuilder.AddNLog();
+                NLog.LogManager.LoadConfiguration("nlog.config");
+                //添加控制台日志,Docker环境下请务必启用
+                logBuilder.AddConsole();
+                //添加调试日志
+                logBuilder.AddDebug();
+            })
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                //已经默认使用Kestrel
+                webBuilder
+                .UseKestrel()
+                .UseIISIntegration()
+                .ConfigureKestrel(serverOptions =>
                 {
-                    opt.AddServerHeader = false;
+                    serverOptions.AddServerHeader = false;
                 })
-                .UseContentRoot(Directory.GetCurrentDirectory())
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
-                    var env = hostingContext.HostingEnvironment;
+                    //var env = hostingContext.HostingEnvironment;
                     //根据环境变量加载不同的JSON配置
                     config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                        .AddJsonFile($"appsettings.{env.EnvironmentName}.json",
+                        .AddJsonFile($"appsettings.{_environmentName}.json",
                             optional: true, reloadOnChange: true);
                     //从环境变量添加配置
                     config.AddEnvironmentVariables();
-                })
-                //.UseIISIntegration()
-                .ConfigureLogging((ILoggingBuilder logBuilder) =>
-                {
-                    logBuilder.AddNLog();
-                    NLog.LogManager.LoadConfiguration("nlog.config");
-                    //添加控制台日志,Docker环境下请务必启用
-                    logBuilder.AddConsole();
-                    //添加调试日志
-                    logBuilder.AddDebug();
-                })
-                .UseStartup<Startup>();
-
-        /*
-        public static IHostBuilder CreateHostBuilder2(string[] args) =>
-                Host.CreateDefaultBuilder(args)
-                .ConfigureLogging((ILoggingBuilder logBuilder) =>
-                {
-                    logBuilder.AddNLog();
-                    logBuilder.AddConsole();
-                    //logBuilder.confi            
-                    NLog.LogManager.LoadConfiguration("mynlog.config");
-                })
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseUrls("http://*:5012");
-                    webBuilder.UseStartup<Startup>();
                 });
-        */
+
+
+                webBuilder.UseStartup<Startup>();
+            });
     }
 }
