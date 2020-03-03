@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using Drypoint.Core.Common;
+using Drypoint.Model.Common;
 using Drypoint.Unity;
 using Drypoint.Unity.Dependency;
 

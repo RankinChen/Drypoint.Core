@@ -19,6 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\model\Drypoint.Model.Custom\Drypoint.Model.Custom.csproj" />
+    <ProjectReference Include="..\..\model\Drypoint.Model\Drypoint.Model.csproj" />
     <ProjectReference Include="..\..\unity\Drypoint.Exception\Drypoint.Exception.csproj" />
     <ProjectReference Include="..\Drypoint.Application\Drypoint.Application.csproj" />
   </ItemGroup>

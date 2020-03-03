@@ -1,5 +1,5 @@
-﻿using Drypoint.Core.Authorization.Roles;
-using Drypoint.Core.Authorization.Users;
+﻿using Drypoint.Model.Authorization.Roles;
+using Drypoint.Model.Authorization.Users;
 using Drypoint.EntityFrameworkCore.Repositories;
 using Drypoint.Unity.Dependency;
 using Drypoint.Unity.Extensions.Collections;
