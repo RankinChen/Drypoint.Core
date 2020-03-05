@@ -26,7 +26,7 @@ namespace Drypoint.SSO
             //    configHost.AddEnvironmentVariables(prefix: "DOTNET_");
             //    configHost.AddCommandLine(args);
             //})
-            .UseContentRoot(Directory.GetCurrentDirectory())
+            .UseContentRoot(Directory.GetCurrentDirectory()) 
             .ConfigureLogging((hostingContext, logBuilder) =>
             {
                 _environmentName = hostingContext.HostingEnvironment.EnvironmentName;
@@ -55,11 +55,8 @@ namespace Drypoint.SSO
                         .AddJsonFile($"appsettings.{_environmentName}.json",
                             optional: true, reloadOnChange: true);
                     //从环境变量添加配置
-                    config.AddEnvironmentVariables();
-                });
-
-
-                webBuilder.UseStartup<Startup>();
+                    config.AddEnvironmentVariables("DOTNET_");
+                }).UseStartup<Startup>();
             });
     }
 }

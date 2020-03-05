@@ -30,7 +30,7 @@ namespace Drypoint.Unity.Extensions
 
         public static UserIdentifier ToUserIdentifier(this IDrypointSession session)
         {
-            return session.UserId == null ? null : new UserIdentifier(session.RoleId, session.GetUserId());
+            return session.UserId == null ? null : new UserIdentifier(0, session.GetUserId());
         }
     }
 }

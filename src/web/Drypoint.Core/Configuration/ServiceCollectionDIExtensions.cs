@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Microsoft.Extensions.Logging;
 
 namespace Drypoint.Core.Configuration
 {
@@ -28,7 +29,8 @@ namespace Drypoint.Core.Configuration
             try
             {
                 services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-                services.TryAddTransient(typeof(IDesignTimeDbContextFactory<DrypointDbContext>), typeof(DrypointDbContextFactory));
+                services.TryAddScoped(typeof(IDesignTimeDbContextFactory<DrypointDbContext>), typeof(DrypointDbContextFactory));
+                //services.TryAddSingleton(typeof(ILogger<>), typeof(ILogger));
                 services.TryAddTransient(typeof(IRepository<,>), typeof(DrypointBaseRepository<,>));
                 AddCommonService(services);
 
