@@ -28,7 +28,9 @@ namespace Drypoint.SSO
         }
 
         public void ConfigureServices(IServiceCollection services)
-        {            
+        {
+            services.AddHttpClient();
+
             //AutoMapper 
             services.AddAutoMapper(cfg =>
             {

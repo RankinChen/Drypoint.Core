@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
 using NLog.Extensions.Logging;
 
-namespace Drypoint.Startup
+namespace Drypoint
 {
     public class Program
     {

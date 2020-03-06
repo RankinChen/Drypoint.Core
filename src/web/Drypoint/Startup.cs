@@ -21,7 +21,7 @@ using Drypoint.Core.Authorization;
 using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
 
-namespace Drypoint.Startup
+namespace Drypoint
 {
     public class Startup
     {
@@ -38,6 +38,7 @@ namespace Drypoint.Startup
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpClient();
             //AutoMapper 
             services.AddAutoMapper(cfg =>
             {
@@ -133,9 +134,9 @@ namespace Drypoint.Startup
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
+        public void Configure(IApplicationBuilder app, ILogger<Startup> logger)
         {
-            if (env.EnvironmentName == "Development")
+            if (Environment.EnvironmentName == "Development")
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -167,15 +168,20 @@ namespace Drypoint.Startup
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
+            //压缩 由于UseStaticFiles在之前 故不压缩静态文件
+            //app.UseResponseCompression();
+            //app.UseCookiePolicy();
+            //app.UseRouting();
 
             //授权相关:资源端代码
             app.UseAuthentication();
 
+            //app.UseAuthorization();
+            //app.UseSession();
             //启用中间件为生成的 Swagger 规范和 Swagger UI 提供服务
             app.UseCustomSwaggerUI(Configuration);
-            //app.UseMvcWithDefaultRoute();
-            app.UseMvc();
 
+            app.UseMvc();
         }
     }
 }
