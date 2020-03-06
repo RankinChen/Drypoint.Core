@@ -19,7 +19,7 @@ namespace Drypoint.Core.Configuration
 {
     public static class SwaggerDocExtensions
     {
-        public static void AddCustomSwaggerGen(this IServiceCollection services, IConfiguration configuration, IHostingEnvironment hostingEnvironment)
+        public static void AddCustomSwaggerGen(this IServiceCollection services, IConfiguration configuration)
         {
             //以下二选一
             //注册OpenAPI

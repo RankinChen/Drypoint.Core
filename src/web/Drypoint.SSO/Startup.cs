@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Http;
 using Drypoint.Core.IdentityServer;
 using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
+using AutoMapper;
+using System;
 
 namespace Drypoint.SSO
 {
@@ -26,16 +28,22 @@ namespace Drypoint.SSO
         }
 
         public void ConfigureServices(IServiceCollection services)
-        {
+        {            
+            //AutoMapper 
+            services.AddAutoMapper(cfg =>
+            {
+                cfg.AddProfile<AutoMapperConfig>();
+            }, AppDomain.CurrentDomain.GetAssemblies());
+
             //DI
             services.AddServiceRegister();
 
             //MVC
-            services.AddMvc(option => option.EnableEndpointRouting = false).AddNewtonsoftJson();
             services.AddMvc(options =>
             {
+                options.EnableEndpointRouting = false;
                 //options.Filters.Add(new CorsAuthorizationFilterFactory(LocalCorsPolicyName));
-            })
+            }).AddNewtonsoftJson()
             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             //Configure CORS for APP
@@ -43,7 +51,16 @@ namespace Drypoint.SSO
             {
                 options.AddPolicy(LocalCorsPolicyName, builder =>
                 {
-                    builder.AllowAnyOrigin()
+                    builder
+                        //.WithOrigins(
+                        //    // App:CorsOrigins in appsettings.json can contain more than one address separated by comma.
+                        //    Configuration["App:CorsOrigins"]
+                        //        .Split(",", StringSplitOptions.RemoveEmptyEntries)
+                        //        .Select(o => o.RemovePostFix("/"))
+                        //        .ToArray()
+                        //)
+                        //.SetIsOriginAllowedToAllowWildcardSubdomains()
+                        .AllowAnyOrigin()
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials();
@@ -57,6 +74,14 @@ namespace Drypoint.SSO
                 options.HttpsPort = 443;
             });
 
+            //是否启用HTTP严格传输安全协议(HSTS)
+            services.AddHsts(options =>
+            {
+                options.Preload = true;
+                options.IncludeSubDomains = true;
+                options.MaxAge = TimeSpan.FromDays(60);
+                options.ExcludedHosts.Add("example.com");
+            });
 
             //授权相关：服务端代码
             services.AddIdentityServer(options =>
@@ -130,6 +155,7 @@ namespace Drypoint.SSO
                         }
                     });
                 });// this will add the global exception handle for production evironment.
+                app.UseHsts();
             }
 
             app.UseCors(LocalCorsPolicyName); //Enable CORS!

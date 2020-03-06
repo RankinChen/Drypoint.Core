@@ -18,57 +18,48 @@ using System.IdentityModel.Tokens.Jwt;
 using AutoMapper;
 using Drypoint.Unity.Extensions;
 using Drypoint.Core.Authorization;
+using System.Net;
+using Microsoft.AspNetCore.Diagnostics;
 
 namespace Drypoint.Startup
 {
     public class Startup
     {
-        private readonly ILogger _logger;
         private const string LocalCorsPolicyName = "localhost";
+        public IConfiguration Configuration { get; }
+        private IWebHostEnvironment Environment { get; }
 
-        private readonly IConfigurationRoot _appConfiguration;
-        private readonly IHostingEnvironment _hostingEnvironment;
-
-        public Startup(IHostingEnvironment env, ILogger<Startup> logger)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
-            _hostingEnvironment = env;
-            _appConfiguration = env.GetAppConfiguration();
-            _logger = logger;
-            _logger.LogInformation($"运行环境:{env.EnvironmentName}");
+            Environment = environment;
+            Configuration = configuration;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //DI
-            services.AddServiceRegister();
-
-            //初始化缓存 参考 https://github.com/2881099/csredis
-            CSRedisClient csredis = new CSRedisClient(_appConfiguration["RedisConnectionString"]);
-            services.AddSingleton(csredis);
-            services.AddSingleton<IDistributedCache>(new CSRedisCache(csredis));
-
             //AutoMapper 
             services.AddAutoMapper(cfg =>
             {
                 cfg.AddProfile<AutoMapperConfig>();
             }, AppDomain.CurrentDomain.GetAssemblies());
 
+            //DI
+            services.AddServiceRegister();
+
+            //初始化缓存 参考 https://github.com/2881099/csredis
+            CSRedisClient csredis = new CSRedisClient(Configuration["RedisConnectionString"]);
+            services.AddSingleton(csredis);
+            services.AddSingleton<IDistributedCache>(new CSRedisCache(csredis));
+
             //MVC
             services.AddMvc(options =>
             {
+                options.EnableEndpointRouting = false;
                 //options.Filters.Add(new CorsAuthorizationFilterFactory(LocalCorsPolicyName));
                 options.Filters.Add(typeof(AsyncAuthorizationFilter));  //添加权限过滤器
-            })
+            }).AddNewtonsoftJson()
             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-
-            var sbuilder = services.AddSignalR(options => { options.EnableDetailedErrors = true; });
-
-            if (!_appConfiguration["RedisConnectionString"].IsNullOrWhiteSpace())
-            {
-                _logger.LogWarning("RedisConnectionString:" + _appConfiguration["RedisConnectionString"]);
-                sbuilder.AddRedis(_appConfiguration["RedisConnectionString"]);
-            }
 
             //Configure CORS for APP
             services.AddCors(options =>
@@ -78,7 +69,7 @@ namespace Drypoint.Startup
                     builder
                         //.WithOrigins(
                         //    // App:CorsOrigins in appsettings.json can contain more than one address separated by comma.
-                        //    _appConfiguration["App:CorsOrigins"]
+                        //    Configuration["App:CorsOrigins"]
                         //        .Split(",", StringSplitOptions.RemoveEmptyEntries)
                         //        .Select(o => o.RemovePostFix("/"))
                         //        .ToArray()
@@ -91,28 +82,21 @@ namespace Drypoint.Startup
                 });
             });
 
-            if (bool.Parse(_appConfiguration["App:HttpsRedirection"] ?? "false"))
+            //设置https重定向端口
+            services.AddHttpsRedirection(options =>
             {
-                //建议开启，以在浏览器显示安全图标
-                //设置https重定向端口
-                services.AddHttpsRedirection(options =>
-                {
-                    options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
-                    options.HttpsPort = 443;
-                });
-            }
+                options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
+                options.HttpsPort = 443;
+            });
 
             //是否启用HTTP严格传输安全协议(HSTS)
-            if (bool.Parse(_appConfiguration["App:UseHsts"] ?? "false"))
+            services.AddHsts(options =>
             {
-                services.AddHsts(options =>
-                {
-                    options.Preload = true;
-                    options.IncludeSubDomains = true;
-                    options.MaxAge = TimeSpan.FromDays(60);
-                    options.ExcludedHosts.Add("example.com");
-                });
-            }
+                options.Preload = true;
+                options.IncludeSubDomains = true;
+                options.MaxAge = TimeSpan.FromDays(60);
+                options.ExcludedHosts.Add("example.com");
+            });
 
             //授权相关:资源端代码
             IdentityModelEventSource.ShowPII = true;
@@ -121,9 +105,9 @@ namespace Drypoint.Startup
             //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             //        .AddJwtBearer(options =>
             //         {
-            //             options.Authority = _appConfiguration["IdentityServer:Authority"];
+            //             options.Authority = Configuration["IdentityServer:Authority"];
             //             options.RequireHttpsMetadata = false;
-            //             options.Audience = _appConfiguration["IdentityServer:ApiName"];
+            //             options.Audience = Configuration["IdentityServer:ApiName"];
             //         });
             //客户端设置 AccessTokenType为Reference时需要API提供认证身份认证
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
@@ -131,9 +115,9 @@ namespace Drypoint.Startup
             .AddIdentityServerAuthentication(options =>
             {
                 //options.JwtValidationClockSkew = TimeSpan.Zero;
-                options.Authority = _appConfiguration["IdentityServer:Authority"];
-                options.ApiName = _appConfiguration["IdentityServer:ApiName"];
-                options.ApiSecret = _appConfiguration["IdentityServer:ApiSecret"];
+                options.Authority = Configuration["IdentityServer:Authority"];
+                options.ApiName = Configuration["IdentityServer:ApiName"];
+                options.ApiSecret = Configuration["IdentityServer:ApiSecret"];
                 options.RequireHttpsMetadata = false;
                 options.JwtValidationClockSkew = TimeSpan.FromSeconds(0);  //验证token间隔时间
                 //待测试
@@ -144,63 +128,53 @@ namespace Drypoint.Startup
             });
 
             //添加自定义API文档生成(支持文档配置)
-            services.AddCustomSwaggerGen(_appConfiguration, _hostingEnvironment);
+            services.AddCustomSwaggerGen(Configuration);
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
-            if (env.IsDevelopment())
+            if (env.EnvironmentName == "Development")
             {
                 app.UseDeveloperExceptionPage();
             }
             else
             {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                if (bool.Parse(_appConfiguration["App:UseHsts"] ?? "false"))
+                app.UseExceptionHandler(builder =>
                 {
-                    app.UseHsts();
-                }
-            }
-
-
-            if (_appConfiguration["Logging:LogType"].ToLower() == "nlog")
-            {
-                loggerFactory.AddNLog();
+                    builder.Run(async context =>
+                    {
+                        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                        context.Response.ContentType = "text/html";
+                        var ex = context.Features.Get<IExceptionHandlerFeature>();
+                        if (ex != null)
+                        {
+                            var err = $"<h1>Error: {ex.Error.Message}</h1>{ex.Error.StackTrace}";
+                            context.Response.Headers.Add("application-error", ex.Error.Message);
+                            context.Response.Headers.Add("access-control-expose-headers", "application-error");
+                            context.Response.Headers.Add("access-control-allow-origin", "*");
+                            await context.Response.WriteAsync(err).ConfigureAwait(false);
+                        }
+                    });
+                });// this will add the global exception handle for production evironment.
+                app.UseHsts();
             }
 
             app.UseCors(LocalCorsPolicyName); //Enable CORS!
-            if (bool.Parse(_appConfiguration["App:HttpsRedirection"] ?? "false"))
-            {
-                _logger.LogWarning("准备启用HTTS跳转...");
-                //建议开启，以在浏览器显示安全图标
-                app.UseHttpsRedirection();
-            }
+
+            //开启HTTPS重定向
+            app.UseHttpsRedirection();
 
             app.UseStaticFiles();
-
-            app.UseSignalR(routes =>
-            {
-                //routes.MapHub<ChatHub>("/signalr-chat");
-            });
 
             //授权相关:资源端代码
             app.UseAuthentication();
 
             //启用中间件为生成的 Swagger 规范和 Swagger UI 提供服务
-            app.UseCustomSwaggerUI(_appConfiguration);
-
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-
-                routes.MapRoute(
-                    name: "defaultWithArea",
-                    template: "{area}/{controller=Home}/{action=Index}/{id?}");
-            });
+            app.UseCustomSwaggerUI(Configuration);
+            //app.UseMvcWithDefaultRoute();
+            app.UseMvc();
 
         }
     }
