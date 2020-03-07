@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +10,7 @@ using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
 using AutoMapper;
 using System;
+using Microsoft.Extensions.Hosting;
 
 namespace Drypoint.SSO
 {
@@ -19,11 +19,11 @@ namespace Drypoint.SSO
         private const string LocalCorsPolicyName = "localhost";
 
         public IConfiguration Configuration { get; }
-        private IWebHostEnvironment Environment { get; }
-
-        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
+        //IWebHostEnvironment继承了IHostEnvironment 添加两个关于Web根目录的属性
+        private IHostEnvironment Environment { get; }
+        public Startup(IConfiguration configuration, IHostEnvironment environment)
         {
-            Environment = environment; 
+            Environment = environment;
             Configuration = configuration;
         }
 
@@ -127,14 +127,14 @@ namespace Drypoint.SSO
                     options.ClientId = "xxxxxxxxxxxxxxxxxm";
                     options.ClientSecret = "xxxxxxxxxxxxxxxxx";
                 });
-            */
+       x     */
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
+        public void Configure(IApplicationBuilder app, IHostEnvironment env, ILogger<Startup> logger)
         {
             logger.LogInformation("Begin Startup Configure......");
-            if (env.EnvironmentName == "Development")
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }

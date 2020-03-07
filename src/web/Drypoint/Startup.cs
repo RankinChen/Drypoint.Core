@@ -1,14 +1,11 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Drypoint.Core.Configuration;
 using Microsoft.AspNetCore.Http;
-using NLog.Extensions.Logging;
-using Newtonsoft.Json;
 using IdentityServer4.AccessTokenValidation;
 using CSRedis;
 using Microsoft.Extensions.Caching.Distributed;
@@ -16,10 +13,10 @@ using Microsoft.Extensions.Caching.Redis;
 using Microsoft.IdentityModel.Logging;
 using System.IdentityModel.Tokens.Jwt;
 using AutoMapper;
-using Drypoint.Unity.Extensions;
 using Drypoint.Core.Authorization;
 using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.Extensions.Hosting;
 
 namespace Drypoint
 {
@@ -27,9 +24,9 @@ namespace Drypoint
     {
         private const string LocalCorsPolicyName = "localhost";
         public IConfiguration Configuration { get; }
-        private IWebHostEnvironment Environment { get; }
+        private IHostEnvironment Environment { get; }
 
-        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
+        public Startup(IConfiguration configuration, IHostEnvironment environment)
         {
             Environment = environment;
             Configuration = configuration;
@@ -136,7 +133,7 @@ namespace Drypoint
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, ILogger<Startup> logger)
         {
-            if (Environment.EnvironmentName == "Development")
+            if (Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
