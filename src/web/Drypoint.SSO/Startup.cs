@@ -12,6 +12,7 @@ using AutoMapper;
 using System;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
+using Autofac;
 
 namespace Drypoint.SSO
 {
@@ -39,14 +40,15 @@ namespace Drypoint.SSO
             }, AppDomain.CurrentDomain.GetAssemblies());
 
             //DI
-            services.AddServiceRegister();
+            //services.AddServiceRegister();
 
             //MVC
             services.AddMvc(options =>
             {
                 options.EnableEndpointRouting = false;
                 //options.Filters.Add(new CorsAuthorizationFilterFactory(LocalCorsPolicyName));
-            }).AddNewtonsoftJson(options=> {
+            }).AddNewtonsoftJson(options =>
+            {
                 //忽略循环引用
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 //不使用驼峰样式的key,按照Model中的属性名进行命名
@@ -57,25 +59,25 @@ namespace Drypoint.SSO
             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             //Configure CORS for APP
-            services.AddCors(options =>
-            {
-                options.AddPolicy(LocalCorsPolicyName, builder =>
-                {
-                    builder
-                        //.WithOrigins(
-                        //    // App:CorsOrigins in appsettings.json can contain more than one address separated by comma.
-                        //    Configuration["App:CorsOrigins"]
-                        //        .Split(",", StringSplitOptions.RemoveEmptyEntries)
-                        //        .Select(o => o.RemovePostFix("/"))
-                        //        .ToArray()
-                        //)
-                        //.SetIsOriginAllowedToAllowWildcardSubdomains()
-                        .AllowAnyOrigin()
-                        .AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .AllowCredentials();
-                });
-            });
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy(LocalCorsPolicyName, builder =>
+            //    {
+            //        builder
+            //            //.WithOrigins(
+            //            //    // App:CorsOrigins in appsettings.json can contain more than one address separated by comma.
+            //            //    Configuration["App:CorsOrigins"]
+            //            //        .Split(",", StringSplitOptions.RemoveEmptyEntries)
+            //            //        .Select(o => o.RemovePostFix("/"))
+            //            //        .ToArray()
+            //            //)
+            //            //.SetIsOriginAllowedToAllowWildcardSubdomains()
+            //            .AllowAnyOrigin()
+            //            .AllowAnyHeader()
+            //            .AllowAnyMethod()
+            //            .AllowCredentials();
+            //    });
+            //});
 
             //设置https重定向端口
             services.AddHttpsRedirection(options =>
@@ -138,7 +140,15 @@ namespace Drypoint.SSO
        x     */
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// Autofac执行注入的地方 ConfigureServices之后执行
+        /// </summary>
+        /// <param name="builder"></param>
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterModule(new AutofacDIExtensionsModule());
+        }
+
         public void Configure(IApplicationBuilder app, IHostEnvironment env, ILogger<Startup> logger)
         {
             logger.LogInformation("Begin Startup Configure......");

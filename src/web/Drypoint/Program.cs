@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
 using NLog.Extensions.Logging;
+using Autofac.Extensions.DependencyInjection;
 
 namespace Drypoint
 {
@@ -17,6 +18,7 @@ namespace Drypoint
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+            .UseServiceProviderFactory(new AutofacServiceProviderFactory())  //注册Autofac
             //.ConfigureHostConfiguration(configHost =>
             //{
             //    configHost.SetBasePath(Directory.GetCurrentDirectory());

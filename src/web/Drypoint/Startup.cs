@@ -17,6 +17,8 @@ using Drypoint.Core.Authorization;
 using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
+using Autofac;
 
 namespace Drypoint
 {
@@ -43,7 +45,7 @@ namespace Drypoint
             }, AppDomain.CurrentDomain.GetAssemblies());
 
             //DI
-            services.AddServiceRegister();
+            //services.AddServiceRegister();
 
             //初始化缓存 参考 https://github.com/2881099/csredis
             CSRedisClient csredis = new CSRedisClient(Configuration["RedisConnectionString"]);
@@ -137,7 +139,15 @@ namespace Drypoint
 
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// Autofac执行注入的地方 ConfigureServices之后执行
+        /// </summary>
+        /// <param name="builder"></param>
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterModule(new AutofacDIExtensionsModule());
+        }
+
         public void Configure(IApplicationBuilder app, ILogger<Startup> logger)
         {
             if (Environment.IsDevelopment())

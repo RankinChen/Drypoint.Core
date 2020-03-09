@@ -20,7 +20,8 @@ namespace Drypoint.Core.Configuration
 {
     /// <summary>
     /// ServiceCollection扩展类
-    /// 注入实现ISingletonDependency和ITransientDependency接口的实现
+    /// 注入实现ISingletonDependency、ITransientDependency、IScopedDependency接口的实现
+    /// 如果Startup.ConfigureServices 未调用，则使用Autofac的调用 详见Startup.ConfigureContainer
     /// </summary>
     public static class ServiceCollectionDIExtensions
     {
@@ -31,7 +32,7 @@ namespace Drypoint.Core.Configuration
                 services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
                 services.TryAddScoped(typeof(IDesignTimeDbContextFactory<DrypointDbContext>), typeof(DrypointDbContextFactory));
                 services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
-                services.TryAddTransient(typeof(IRepository<,>), typeof(DrypointBaseRepository<,>));
+                services.TryAddScoped(typeof(IRepository<,>), typeof(DrypointBaseRepository<,>));
                 AddCommonService(services);
 
 
@@ -81,7 +82,7 @@ namespace Drypoint.Core.Configuration
                     {
                         continue;
                     }
-                    if (ltInterface.Any(aa => aa == typeof(ISingletonDependency) || aa == typeof(ITransientDependency)))
+                    if (ltInterface.Any(aa => aa == typeof(ISingletonDependency) || aa == typeof(IScopedDependency)))
                     {
                         //如果类名和接口名之差一个I字母
                         if (ltInterface.Any(aa => aa.Name == "I" + item.Name))

@@ -11,8 +11,7 @@ namespace Drypoint.Unity.Dependency
     /// 参考
     /// https://docs.microsoft.com/zh-cn/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-2.2
     /// </summary>
-    public interface ITransientDependency
+    public interface IScopedDependency
     {
-
     }
 }

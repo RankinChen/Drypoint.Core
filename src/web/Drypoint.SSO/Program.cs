@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Hosting;
+using Autofac.Extensions.DependencyInjection;
 
 namespace Drypoint.SSO
 {
@@ -19,6 +20,7 @@ namespace Drypoint.SSO
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+            .UseServiceProviderFactory(new AutofacServiceProviderFactory())  //注册Autofac
             //.ConfigureHostConfiguration(configHost =>
             //{
             //    configHost.SetBasePath(Directory.GetCurrentDirectory());

@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="IdentityServer4" Version="3.1.1" />
     <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
@@ -17,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\application\Drypoint.Application.Custom\Drypoint.Application.Custom.csproj" />
     <ProjectReference Include="..\..\application\Drypoint.Application\Drypoint.Application.csproj" />
     <ProjectReference Include="..\..\data\Drypoint.EntityFrameworkCore\Drypoint.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\..\model\Drypoint.Model\Drypoint.Model.csproj" />

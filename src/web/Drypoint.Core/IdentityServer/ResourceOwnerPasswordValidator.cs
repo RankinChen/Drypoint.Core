@@ -18,7 +18,7 @@ namespace Drypoint.Core.IdentityServer
     /// <summary>
     /// 用户名密码验证方式时生效
     /// </summary>
-    public class ResourceOwnerPasswordValidator : IResourceOwnerPasswordValidator, ITransientDependency
+    public class ResourceOwnerPasswordValidator : IResourceOwnerPasswordValidator, IScopedDependency
     {
         private readonly ILogger _logger;
         private readonly IRepository<User, long> _userRepository;

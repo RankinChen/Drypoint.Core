@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Drypoint.Core.Configuration
 {
-    public interface IAppConfigurationAccessor:ITransientDependency
+    public interface IAppConfigurationAccessor:IScopedDependency
     {
         IConfigurationRoot Configuration { get; }
     }
