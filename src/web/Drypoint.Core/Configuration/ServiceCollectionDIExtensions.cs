@@ -82,7 +82,7 @@ namespace Drypoint.Core.Configuration
                     {
                         continue;
                     }
-                    if (ltInterface.Any(aa => aa == typeof(ISingletonDependency) || aa == typeof(IScopedDependency)))
+                    if (ltInterface.Any(aa => aa == typeof(ISingletonDependency) || aa == typeof(ITransientDependency) || aa == typeof(IScopedDependency)))
                     {
                         //如果类名和接口名之差一个I字母
                         if (ltInterface.Any(aa => aa.Name == "I" + item.Name))
@@ -91,6 +91,11 @@ namespace Drypoint.Core.Configuration
                             {
                                 Type itface = ltInterface.FirstOrDefault(aa => aa.GetType() != typeof(ISingletonDependency) && aa.Name == "I" + item.Name);
                                 services.TryAddSingleton(itface, item);
+                            }
+                            else if (ltInterface.Any(aa => aa == typeof(IScopedDependency)))
+                            {
+                                Type itface = ltInterface.FirstOrDefault(aa => aa.GetType() != typeof(IScopedDependency) && aa.Name == "I" + item.Name);
+                                services.TryAddScoped(itface, item);
                             }
                             else
                             {
@@ -106,6 +111,11 @@ namespace Drypoint.Core.Configuration
                                 {
                                     Type itface = ltInterface.FirstOrDefault(aa => aa.GetType() != typeof(ISingletonDependency));
                                     services.TryAddSingleton(itface, item);
+                                }
+                                else if (ltInterface.Any(aa => aa == typeof(IScopedDependency)))
+                                {
+                                    Type itface = ltInterface.FirstOrDefault(aa => aa.GetType() != typeof(IScopedDependency) && aa.Name == "I" + item.Name);
+                                    services.TryAddScoped(itface, item);
                                 }
                                 else
                                 {
