@@ -56,7 +56,14 @@ namespace Drypoint
                 options.EnableEndpointRouting = false;
                 //options.Filters.Add(new CorsAuthorizationFilterFactory(LocalCorsPolicyName));
                 options.Filters.Add(typeof(AsyncAuthorizationFilter));  //添加权限过滤器
-            }).AddNewtonsoftJson()
+            }).AddNewtonsoftJson(options => {
+                //忽略循环引用
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                //不使用驼峰样式的key,按照Model中的属性名进行命名
+                options.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver();
+                options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+
+            })
             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             //Configure CORS for APP
