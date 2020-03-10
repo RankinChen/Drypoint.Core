@@ -59,25 +59,25 @@ namespace Drypoint.SSO
             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             //Configure CORS for APP
-            //services.AddCors(options =>
-            //{
-            //    options.AddPolicy(LocalCorsPolicyName, builder =>
-            //    {
-            //        builder
-            //            //.WithOrigins(
-            //            //    // App:CorsOrigins in appsettings.json can contain more than one address separated by comma.
-            //            //    Configuration["App:CorsOrigins"]
-            //            //        .Split(",", StringSplitOptions.RemoveEmptyEntries)
-            //            //        .Select(o => o.RemovePostFix("/"))
-            //            //        .ToArray()
-            //            //)
-            //            //.SetIsOriginAllowedToAllowWildcardSubdomains()
-            //            .AllowAnyOrigin()
-            //            .AllowAnyHeader()
-            //            .AllowAnyMethod()
-            //            .AllowCredentials();
-            //    });
-            //});
+            services.AddCors(options =>
+            {
+                options.AddPolicy(LocalCorsPolicyName, builder =>
+                {
+                    builder
+                        //.WithOrigins(
+                        //    // App:CorsOrigins in appsettings.json can contain more than one address separated by comma.
+                        //    Configuration["App:CorsOrigins"]
+                        //        .Split(",", StringSplitOptions.RemoveEmptyEntries)
+                        //        .Select(o => o.RemovePostFix("/"))
+                        //        .ToArray()
+                        //)
+                        //.SetIsOriginAllowedToAllowWildcardSubdomains()
+                        .SetIsOriginAllowed(ori => true)
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
+                });
+            });
 
             //设置https重定向端口
             services.AddHttpsRedirection(options =>
