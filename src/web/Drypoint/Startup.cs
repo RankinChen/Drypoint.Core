@@ -82,7 +82,6 @@ namespace Drypoint
                         //)
                         //.SetIsOriginAllowedToAllowWildcardSubdomains()
                         .SetIsOriginAllowed(ori => true)
-                        .AllowAnyOrigin()
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials();

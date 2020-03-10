@@ -43,6 +43,7 @@ namespace Drypoint.SSO
             //services.AddServiceRegister();
 
             //MVC
+            services.AddControllersWithViews();
             services.AddMvc(options =>
             {
                 options.EnableEndpointRouting = false;
@@ -183,14 +184,22 @@ namespace Drypoint.SSO
             //开启HTTPS重定向
             app.UseHttpsRedirection();
 
-
             //授权相关：服务端代码
             app.UseIdentityServer();
 
             app.UseStaticFiles();
+            app.UseRouting();
 
-            //app.UseMvcWithDefaultRoute();
-            app.UseMvc();
+            //app.UseMvc(routes =>
+            //{
+            //    routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
+            //});
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+            });
         }
     }
 }
