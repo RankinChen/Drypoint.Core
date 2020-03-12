@@ -10,6 +10,7 @@ using System.Net.Http;
 using Microsoft.AspNetCore.Authentication;
 using System.Net;
 using IdentityModel.Client;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Drypoint.MVC.Controllers
 {

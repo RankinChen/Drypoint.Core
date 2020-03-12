@@ -194,6 +194,7 @@ namespace Drypoint.SSO
             //{
             //    routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
             //});
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
