@@ -2,9 +2,9 @@
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Hosting;
 using NLog.Extensions.Logging;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Drypoint
 {
