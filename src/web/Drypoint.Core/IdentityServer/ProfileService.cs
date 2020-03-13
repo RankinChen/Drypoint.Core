@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Drypoint.Core.IdentityServer
 {
-    public class ProfileService : IProfileService, IScopedDependency
+    public class ProfileService : IProfileService, ITransientDependency
     {
         private readonly ILogger _logger;
         private readonly IRepository<User, long> _userRepository;
