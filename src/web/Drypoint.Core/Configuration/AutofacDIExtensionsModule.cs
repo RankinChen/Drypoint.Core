@@ -46,7 +46,7 @@ namespace Drypoint.Core.Configuration
             };
 
 
-            Type iTransientDependency = typeof(IScopedDependency);
+            Type iTransientDependency = typeof(ITransientDependency);
             builder.RegisterAssemblyTypes(assemblies)
                    .Where(type => iTransientDependency.IsAssignableFrom(type) && !type.IsAbstract && FilterType(type.Name))
                    .AsSelf().AsImplementedInterfaces()
