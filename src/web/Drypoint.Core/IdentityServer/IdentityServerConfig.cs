@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Drypoint.Unity;
+using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Models;
 using Microsoft.Extensions.Configuration;
@@ -48,11 +50,12 @@ namespace Drypoint.Core.IdentityServer
                 new IdentityResources.Address(),
                 new IdentityResources.Phone(),
                 new IdentityResources.Email(),
-                //自定义
-                //new IdentityResource {
-                //    Name = "role",
-                //    UserClaims = new List<string> {"role"}
-                //}
+                //自定义一个叫role的scope
+                new IdentityResource {
+                    Name =DrypointConsts.RolesScope,            //scope的名字
+                    DisplayName="角色",                         //scope的显示名
+                    UserClaims = new List<string> { JwtClaimTypes.Role }      //scope所包含的claim类型
+                }
             };
         }
 
@@ -95,7 +98,6 @@ namespace Drypoint.Core.IdentityServer
                 {
                     client.AlwaysIncludeUserClaimsInIdToken = alwaysIncludeUserClaimsInIdToken;
                 }
-                
 
                 client.AccessTokenLifetime = int.TryParse(child["AccessTokenLifetime"], out int accessTokenLifetime) ? accessTokenLifetime : 60 * 30;
 

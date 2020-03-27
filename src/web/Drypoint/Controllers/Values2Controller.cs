@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Drypoint.Application.Authorization;
 using Drypoint.Application.Custom.Demo;
 using Drypoint.EntityFrameworkCore.EntityFrameworkCore;
 using Drypoint.Unity;
@@ -27,6 +28,7 @@ namespace Drypoint.Controllers
 
         // GET api/values
         [HttpGet]
+        [DrypointAuthorize("AAA", "BBB", RequireAllPermissions = false)]
         public ActionResult<IEnumerable<string>> Get()
         {
             var result = _demoAppService.GetAll();

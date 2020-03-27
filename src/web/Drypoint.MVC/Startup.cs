@@ -67,6 +67,7 @@ namespace Drypoint.MVC
                 options.Scope.Add(OidcConstants.StandardScopes.Profile);
                 options.Scope.Add(OidcConstants.StandardScopes.Email);
                 options.Scope.Add(OidcConstants.StandardScopes.Phone);
+                options.Scope.Add("roles");
 
                 //options.Scope.Add(OidcConstants.StandardScopes.OfflineAccess);
 

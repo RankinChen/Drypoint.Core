@@ -43,7 +43,7 @@ namespace Drypoint.MVC.Controllers
 
             client.SetBearerToken(accessToken);
 
-            //var idToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken);
+           var idToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken);
 
             //client.SetBearerToken(idToken);
 
