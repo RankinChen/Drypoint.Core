@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using Drypoint.Unity;
 using IdentityModel;
 using IdentityServer4;
@@ -14,33 +15,23 @@ namespace Drypoint.Core.IdentityServer
         /// api资源
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<ApiResource> GetApiResources(IConfiguration configuration)
+        public static IEnumerable<ApiResource> GetApiResources()
         {
-
-            var apiResources = new List<ApiResource>();
-
-            foreach (var child in configuration.GetSection("IdentityServer:ApiResources").GetChildren())
+            return new ApiResource[]
             {
-                apiResources.Add(new ApiResource(child["ApiName"], child["DisplayName"])
+                new ApiResource("Drypoint_Host_API", "Drypoint Host API(All)")
                 {
-                    Description = child["Description"],
-                    ApiSecrets = { new Secret(child["ApiSecret"].Sha256()) },
-                    //请求范围
-                    //Scopes = new List<Scope>
-                    //{
-                    //    new Scope("api.read"),
-                    //    new Scope("api.write")
-                    //}
-                });
-            }
-            return apiResources;
+                    Description="所有的API包括前端和后端",
+                    ApiSecrets = { new Secret("Drypoint_Host_API_6E183983F7654289AE79077DDD28C3B4".Sha256()) }
+                }
+            };
         }
 
         /// <summary>
         /// 身份资源范围
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<IdentityResource> GetIdentityResources(IConfiguration configuration)
+        public static IEnumerable<IdentityResource> GetIdentityResources()
         {
             //IdentityServer支持的一些标准OpenID Connect定义的范围
             return new List<IdentityResource>
@@ -62,50 +53,111 @@ namespace Drypoint.Core.IdentityServer
         /// <summary>
         /// 客户端
         /// </summary>
-        public static IEnumerable<Client> GetClients(IConfiguration configuration)
+        public static IEnumerable<Client> GetClients()
         {
-            var clients = new List<Client>();
-
-            foreach (var child in configuration.GetSection("IdentityServer:Clients").GetChildren())
-            {
-                var client = new Client
-                {
-                    ClientId = child["ClientId"],
-                    ClientName = child["ClientName"],
-                    ClientUri = child["ClientUri"] ?? "",
-                    AllowedGrantTypes = child.GetSection("AllowedGrantTypes").GetChildren().Select(c => c.Value).ToArray(),
-                    AllowedCorsOrigins = child.GetSection("AllowedCorsOrigins").GetChildren().Select(c => c.Value)?.ToArray(),
+            return new[]{
+                new Client{
+                    ClientId= "code client",
+                    ClientName= "NSwag Authorize用",
+                    //hybrid混合模式 详见:IdentityServer4.Models.GrantTypes
+                    AllowedGrantTypes= GrantTypes.Code,
+                    AccessTokenType = AccessTokenType.Reference,
+                    AllowAccessTokensViaBrowser=false,
+                    //如果不需要显示否同意授权页面 这里就设置为false",
+                    RequireConsent= false,
+                    ClientSecrets ={
+                        new Secret("code secret".Sha256())
+                    },
+                    //登录成功后返回的客户端地址
+                    RedirectUris= {
+                        "https://localhost:44332/swagger/oauth2-redirect.html"
+                    },
+                    //注销登录后返回的客户端地址
+                    PostLogoutRedirectUris={
+                        "https://localhost:44332/swagger/oauth2-redirect.html"
+                    },
+                    //详见:IdentityServerConstants.StandardScopes
+                    AllowedScopes={
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Email,
+                        IdentityServerConstants.StandardScopes.Phone,
+                        "Drypoint_Host_API",
+                        DrypointConsts.RolesScope
+                    },
+                    AlwaysIncludeUserClaimsInIdToken= true,
+                    AllowOfflineAccess = true,
+                    AccessTokenLifetime = 60 * 30
+                },
+                new Client{
+                    ClientId="hybrid client",
+                    ClientName= "Hybrid 客户端",
+                    //允许跨域访问的地址（通常是前端页面直接访问授权）
+                    AllowedCorsOrigins={ "http://localhost:7000" },
+                    //hybrid混合模式 详见:IdentityServer4.Models.GrantTypes
+                    AllowedGrantTypes=GrantTypes.Hybrid,
                     AccessTokenType = AccessTokenType.Reference, //默认值为 JWT   Reference方式需要API提供身份认证
-                    ClientSecrets = child.GetSection("ClientSecrets").GetChildren().Select(secret => new Secret(secret["Value"].Sha256())).ToArray(),
-                    AllowedScopes = child.GetSection("AllowedScopes").GetChildren().Select(c => c.Value).ToArray(),
-                    RedirectUris = child.GetSection("RedirectUris").GetChildren().Select(c => c.Value).ToArray(),
-                    PostLogoutRedirectUris = child.GetSection("PostLogoutRedirectUris").GetChildren().Select(c => c.Value).ToArray(),
-                };
-
-                if (bool.TryParse(child["AllowAccessTokensViaBrowser"], out bool allowAccessTokensViaBrowser))
-                {
-                    client.AllowAccessTokensViaBrowser = allowAccessTokensViaBrowser;
+                    AllowAccessTokensViaBrowser= false, //为True可能会导致登录过后 关闭浏览器 再打开不会唤起登录页面
+                    //如果不需要显示否同意授权页面 这里就设置为false": null,
+                    RequireConsent=true,
+                    ClientSecrets ={
+                        new Secret("hybrid secret".Sha256())
+                    },
+                    //登录成功后返回的客户端地址
+                    RedirectUris={
+                        "http://localhost:7000/signin-oidc" 
+                        // "https://localhost:44332/swagger/index.html"  
+                    },
+                    //注销登录后返回的客户端地址
+                    PostLogoutRedirectUris={
+                        "http://localhost:7000/signout-callback-oidc"
+                            //"https://localhost:44332/swagger/index.html"
+                    },
+                    //详见:IdentityServerConstants.StandardScopes
+                    AllowedScopes={
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Email,
+                        IdentityServerConstants.StandardScopes.Phone,
+                        "Drypoint_Host_API",
+                        DrypointConsts.RolesScope
+                    },
+                    AllowOfflineAccess= true
+                    },
+                new Client{
+                    ClientId="angular client",
+                    ClientName= "Angular 客户端",
+                    ClientUri= "http://localhost:4200",
+                    //允许跨域访问的地址（通常是前端页面直接访问授权）
+                    AllowedCorsOrigins= {"http://localhost:4200" },
+                    //hybrid混合模式 详见:IdentityServer4.Models.GrantTypes
+                    AllowedGrantTypes=GrantTypes.HybridAndClientCredentials,
+                    AccessTokenType = AccessTokenType.Reference, //默认值为 JWT   Reference方式需要API提供身份认证
+                    AllowAccessTokensViaBrowser= true,
+                    //如果不需要显示否同意授权页面 这里就设置为false",
+                    RequireConsent= false,
+                    ClientSecrets ={
+                        new Secret("angular client".Sha256())
+                    },
+                    //登录成功后返回的客户端地址
+                    RedirectUris={
+                        "http://localhost:4200/signin-oidc",
+                        "http://localhost:4200/redirect-silentrenew"
+                    },
+                    //注销登录后返回的客户端地址
+                    PostLogoutRedirectUris= { "http://localhost:4200" },
+                    //详见:IdentityServerConstants.StandardScopes
+                        AllowedScopes={
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Email,
+                        IdentityServerConstants.StandardScopes.Phone,
+                        "Drypoint_Host_API",
+                        DrypointConsts.RolesScope
+                    },
+                    AllowOfflineAccess= true
                 }
-                if (bool.TryParse(child["RequireConsent"], out bool requireConsent))
-                {
-                    client.RequireConsent = requireConsent;
-                }
-                if (bool.TryParse(child["AllowOfflineAccess"], out bool allowOfflineAccess))
-                {
-                    client.AllowOfflineAccess = allowOfflineAccess;
-                }
-                if (bool.TryParse(child["AlwaysIncludeUserClaimsInIdToken"], out bool alwaysIncludeUserClaimsInIdToken))
-                {
-                    client.AlwaysIncludeUserClaimsInIdToken = alwaysIncludeUserClaimsInIdToken;
-                }
-
-                client.AccessTokenLifetime = int.TryParse(child["AccessTokenLifetime"], out int accessTokenLifetime) ? accessTokenLifetime : 60 * 30;
-
-                clients.Add(client);
-
-            }
-
-            return clients;
+            };
         }
 
         public static List<IdentityServer4.Test.TestUser> GetTestUser()
@@ -116,13 +168,20 @@ namespace Drypoint.Core.IdentityServer
             {
                 SubjectId = "1",
                 Username = "admin",
-                Password = "123456"
+                Password = "123456",
+                Claims = {
+                    new Claim(JwtClaimTypes.Role,"admin")
+                }
+
             });
             ltUser.Add(new IdentityServer4.Test.TestUser
             {
                 SubjectId = "2",
                 Username = "user",
-                Password = "123456"
+                Password = "123456",
+                Claims = {
+                    new Claim(JwtClaimTypes.Role,"User")
+                }
             });
             return ltUser;
         }

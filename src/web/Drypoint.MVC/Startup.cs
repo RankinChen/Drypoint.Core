@@ -5,6 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 using Drypoint.MVC.Auths;
+using Drypoint.Unity;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -17,6 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Drypoint.MVC
 {
@@ -67,7 +69,7 @@ namespace Drypoint.MVC
                 options.Scope.Add(OidcConstants.StandardScopes.Profile);
                 options.Scope.Add(OidcConstants.StandardScopes.Email);
                 options.Scope.Add(OidcConstants.StandardScopes.Phone);
-                options.Scope.Add("roles");
+                options.Scope.Add(DrypointConsts.RolesScope);
 
                 //options.Scope.Add(OidcConstants.StandardScopes.OfflineAccess);
 
@@ -81,12 +83,12 @@ namespace Drypoint.MVC
                 //options.ClaimActions.DeleteClaim("sub");
                 //options.ClaimActions.DeleteClaim("idp");
 
-                //// 让Claim里面的角色成为mvc系统识别的角色
-                //options.TokenValidationParameters = new TokenValidationParameters
-                //{
-                //    NameClaimType = JwtClaimTypes.Name,
-                //    RoleClaimType = JwtClaimTypes.Role
-                //};
+                // 让Claim里面的角色成为mvc系统识别的角色
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    NameClaimType = JwtClaimTypes.Name,
+                    RoleClaimType = JwtClaimTypes.Role
+                };
 
                 options.Events = new OpenIdConnectEvents()
                 {
@@ -101,16 +103,16 @@ namespace Drypoint.MVC
                 };
             });
 
-            services.AddSingleton<IAuthorizationRequirement, SmithInSomewareRequirement>();
-            services.AddSingleton<IAuthorizationHandler, SmithInSomewhereHandler>();
+            //services.AddSingleton<IAuthorizationRequirement, SmithInSomewareRequirement>();
+            //services.AddSingleton<IAuthorizationHandler, SmithInSomewhereHandler>();
 
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("SmithInSomewhere", builder =>
-                {
-                    builder.AddRequirements(new SmithInSomewareRequirement());
-                });
-            });
+            //services.AddAuthorization(options =>
+            //{
+            //    options.AddPolicy("SmithInSomewhere", builder =>
+            //    {
+            //        builder.AddRequirements(new SmithInSomewareRequirement());
+            //    });
+            //});
 
         }
 

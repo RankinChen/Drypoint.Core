@@ -116,9 +116,9 @@ namespace Drypoint.SSO
                 //};
             }).AddDeveloperSigningCredential()        //使用演示签名证书
             //.AddSigningCredential(new X509Certificate2(Path.Combine(AppContext.BaseDirectory, Configuration["Certs:Path"]), Configuration["Certs:Pwd"]))
-              .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources(Configuration))
-              .AddInMemoryApiResources(IdentityServerConfig.GetApiResources(Configuration))
-              .AddInMemoryClients(IdentityServerConfig.GetClients(Configuration))
+              .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources())
+              .AddInMemoryApiResources(IdentityServerConfig.GetApiResources())
+              .AddInMemoryClients(IdentityServerConfig.GetClients())
               //使用内存测试数据身份认证 TODO
               .AddTestUsers(IdentityServerConfig.GetTestUser())
               //添加自定义claim

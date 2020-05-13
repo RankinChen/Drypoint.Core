@@ -47,7 +47,8 @@ namespace Drypoint.MVC.Controllers
 
             //client.SetBearerToken(idToken);
 
-            var response = await client.GetAsync("https://localhost:44332/api/Values2");
+            // var response = await client.GetAsync("https://localhost:44332/api/Values2");
+            var response = await client.GetAsync("https://localhost:44332/Identity");
             //if (!response.IsSuccessStatusCode)
             //{
             //    throw new Exception(response.ReasonPhrase);
@@ -58,7 +59,7 @@ namespace Drypoint.MVC.Controllers
             return View("TestAPI", content);
         }
 
-        [Authorize(Policy = "SmithInSomewhere")]
+        //[Authorize(Policy = "SmithInSomewhere")]
         public IActionResult Privacy()
         {
             var accessToken = HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken).Result;

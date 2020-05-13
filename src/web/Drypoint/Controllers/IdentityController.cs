@@ -7,7 +7,7 @@ namespace Drypoint.Controllers
 {
     [ApiExplorerSettings(GroupName = DrypointConsts.AdminAPIGroupName)]
     [Route("identity")]
-    [Authorize]
+    //[Authorize]
     public class IdentityController : ControllerBase
     {
         [HttpGet]
