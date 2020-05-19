@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Authentication;
 using System.Net;
 using IdentityModel.Client;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Globalization;
 
 namespace Drypoint.MVC.Controllers
 {
@@ -21,7 +23,7 @@ namespace Drypoint.MVC.Controllers
         {
             _clientFactory = clientFactory;
         }
-
+        [Authorize]
         public IActionResult Index()
         {
             var user = User.Identity;
@@ -43,20 +45,22 @@ namespace Drypoint.MVC.Controllers
 
             client.SetBearerToken(accessToken);
 
-           var idToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken);
-
-            //client.SetBearerToken(idToken);
-
-            // var response = await client.GetAsync("https://localhost:44332/api/Values2");
             var response = await client.GetAsync("https://localhost:44332/Identity");
+
             //if (!response.IsSuccessStatusCode)
             //{
+            //    if (response.StatusCode == HttpStatusCode.Unauthorized)
+            //    {
+            //        await RenewTokensAsync();
+            //        return RedirectToAction();
+            //    }
             //    throw new Exception(response.ReasonPhrase);
             //}
 
             var content = await response.Content.ReadAsStringAsync();
 
             return View("TestAPI", content);
+
         }
 
         //[Authorize(Policy = "SmithInSomewhere")]
@@ -78,6 +82,74 @@ namespace Drypoint.MVC.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+
+        private async Task<string> RenewTokensAsync()
+        {
+            var client = new HttpClient();
+            var disco = await client.GetDiscoveryDocumentAsync("https://localhost:44333");
+            if (disco.IsError)
+            {
+                throw new Exception(disco.Error);
+            }
+
+            var refreshToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
+
+            // Refresh Access Token
+            var tokenResponse = await client.RequestRefreshTokenAsync(new RefreshTokenRequest
+            {
+                Address = disco.TokenEndpoint,
+                ClientId = "mvc client",
+                ClientSecret = "mvc secret",
+                Scope = "api1 openid profile email phone address",
+                GrantType = OpenIdConnectGrantTypes.RefreshToken,
+                RefreshToken = refreshToken
+            });
+
+            if (tokenResponse.IsError)
+            {
+                throw new Exception(tokenResponse.Error);
+            }
+
+            var expiresAt = DateTime.UtcNow + TimeSpan.FromSeconds(tokenResponse.ExpiresIn);
+
+            var tokens = new[]
+            {
+                new AuthenticationToken
+                {
+                    Name = OpenIdConnectParameterNames.IdToken,
+                    Value = tokenResponse.IdentityToken
+                },
+                new AuthenticationToken
+                {
+                    Name = OpenIdConnectParameterNames.AccessToken,
+                    Value = tokenResponse.AccessToken
+                },
+                new AuthenticationToken
+                {
+                    Name = OpenIdConnectParameterNames.RefreshToken,
+                    Value = tokenResponse.RefreshToken
+                },
+                new AuthenticationToken
+                {
+                    Name = "expires_at",
+                    Value = expiresAt.ToString("o", CultureInfo.InvariantCulture)
+                }
+            };
+
+            // 获取身份认证的结果，包含当前的pricipal和properties
+            var currentAuthenticateResult =
+                await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            // 把新的tokens存起来
+            currentAuthenticateResult.Properties.StoreTokens(tokens);
+
+            // 登录
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                currentAuthenticateResult.Principal, currentAuthenticateResult.Properties);
+
+            return tokenResponse.AccessToken;
         }
     }
 }

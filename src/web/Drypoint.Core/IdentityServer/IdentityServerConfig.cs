@@ -5,6 +5,7 @@ using Drypoint.Unity;
 using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Models;
+using IdentityServer4.Test;
 using Microsoft.Extensions.Configuration;
 
 namespace Drypoint.Core.IdentityServer
@@ -34,7 +35,7 @@ namespace Drypoint.Core.IdentityServer
         public static IEnumerable<IdentityResource> GetIdentityResources()
         {
             //IdentityServer支持的一些标准OpenID Connect定义的范围
-            return new List<IdentityResource>
+            return new IdentityResource[]
             {
                 new IdentityResources.OpenId(), //必须包含
                 new IdentityResources.Profile(),
@@ -113,6 +114,8 @@ namespace Drypoint.Core.IdentityServer
                         "http://localhost:7000/signout-callback-oidc"
                             //"https://localhost:44332/swagger/index.html"
                     },
+                    AlwaysIncludeUserClaimsInIdToken= true,
+                    AllowOfflineAccess= true,
                     //详见:IdentityServerConstants.StandardScopes
                     AllowedScopes={
                         IdentityServerConstants.StandardScopes.OpenId,
@@ -122,8 +125,7 @@ namespace Drypoint.Core.IdentityServer
                         "Drypoint_Host_API",
                         DrypointConsts.RolesScope
                     },
-                    AllowOfflineAccess= true
-                    },
+                },
                 new Client{
                     ClientId="angular client",
                     ClientName= "Angular 客户端",
@@ -155,6 +157,7 @@ namespace Drypoint.Core.IdentityServer
                         "Drypoint_Host_API",
                         DrypointConsts.RolesScope
                     },
+                    AlwaysIncludeUserClaimsInIdToken= true,
                     AllowOfflineAccess= true
                 }
             };
@@ -162,28 +165,48 @@ namespace Drypoint.Core.IdentityServer
 
         public static List<IdentityServer4.Test.TestUser> GetTestUser()
         {
-            List<IdentityServer4.Test.TestUser> ltUser = new List<IdentityServer4.Test.TestUser>();
+            List<TestUser> Users = new List<TestUser>();
 
-            ltUser.Add(new IdentityServer4.Test.TestUser
+            var user1 = new TestUser
             {
                 SubjectId = "1",
                 Username = "admin",
                 Password = "123456",
-                Claims = {
-                    new Claim(JwtClaimTypes.Role,"admin")
+                Claims =
+                {
+                    new Claim(JwtClaimTypes.Name, "Alice Smith"),
+                    new Claim(JwtClaimTypes.GivenName, "Alice"),
+                    new Claim(JwtClaimTypes.FamilyName, "Smith"),
+                    new Claim(JwtClaimTypes.Email, "admin@email.com"),
+                    new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
+                    new Claim(JwtClaimTypes.WebSite, "http://alice.com"),
+                    new Claim(JwtClaimTypes.Address, @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }", IdentityServer4.IdentityServerConstants.ClaimValueTypes.Json),
+                    new Claim(JwtClaimTypes.Role, "admin")
                 }
-
-            });
-            ltUser.Add(new IdentityServer4.Test.TestUser
+            };
+            var user2 = new TestUser
             {
                 SubjectId = "2",
                 Username = "user",
                 Password = "123456",
-                Claims = {
-                    new Claim(JwtClaimTypes.Role,"User")
+                Claims =
+                {
+                    new Claim(JwtClaimTypes.Name, "Bob Smith"),
+                    new Claim(JwtClaimTypes.GivenName, "Bob"),
+                    new Claim(JwtClaimTypes.FamilyName, "Smith"),
+                    new Claim(JwtClaimTypes.Email, "user@email.com"),
+                    new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
+                    new Claim(JwtClaimTypes.WebSite, "http://bob.com"),
+                    new Claim(JwtClaimTypes.Address, @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }", IdentityServer4.IdentityServerConstants.ClaimValueTypes.Json),
+                    new Claim("location", "somewhere"),
+                    new Claim(JwtClaimTypes.Role, "user")
                 }
-            });
-            return ltUser;
+            };
+
+            Users.Add(user1);
+            Users.Add(user2);
+
+            return Users;
         }
     }
 }
