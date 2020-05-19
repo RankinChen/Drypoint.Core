@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Drypoint.Unity;
+using Drypoint.Unity.EnumCollection;
 
 namespace Drypoint.EntityFrameworkCore.EntityFrameworkCore
 {
@@ -17,7 +18,7 @@ namespace Drypoint.EntityFrameworkCore.EntityFrameworkCore
         {
             var builder = new DbContextOptionsBuilder<DrypointDbContext>();
 
-            DrypointDbContextConfigurer.Configure(builder, _configuration.GetConnectionString(DrypointConsts.ConnectionStringName_PostgreSQL), DBCategory.PostgreSQL);
+            DrypointDbContextConfigurer.Configure(builder, _configuration.GetConnectionString(DrypointConsts.ConnectionStringName_PostgreSQL), DBCategoryEnum.PostgreSQL);
 
             return new DrypointDbContext(builder.Options);
         }

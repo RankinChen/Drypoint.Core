@@ -1,4 +1,5 @@
 ﻿using Drypoint.Unity;
+using Drypoint.Unity.EnumCollection;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,28 +10,28 @@ namespace Drypoint.EntityFrameworkCore.EntityFrameworkCore
 {
     public static class DrypointDbContextConfigurer
     {
-        public static void Configure(DbContextOptionsBuilder<DrypointDbContext> builder, string connectionString, DBCategory dbCategory = DBCategory.SQLServer)
+        public static void Configure(DbContextOptionsBuilder<DrypointDbContext> builder, string connectionString, DBCategoryEnum dbCategory = DBCategoryEnum.SQLServer)
         {
             switch (dbCategory)
             {
-                case DBCategory.SQLServer:
+                case DBCategoryEnum.SQLServer:
                     builder.UseSqlServer(connectionString);
                     break;
-                case DBCategory.PostgreSQL:
+                case DBCategoryEnum.PostgreSQL:
                     builder.UseNpgsql(connectionString);
                     break;
             }
 
         }
 
-        public static void Configure(DbContextOptionsBuilder<DrypointDbContext> builder, DbConnection connection, DBCategory dbCategory)
+        public static void Configure(DbContextOptionsBuilder<DrypointDbContext> builder, DbConnection connection, DBCategoryEnum dbCategory)
         {
             switch (dbCategory)
             {
-                case DBCategory.SQLServer:
+                case DBCategoryEnum.SQLServer:
                     builder.UseSqlServer(connection);
                     break;
-                case DBCategory.PostgreSQL:
+                case DBCategoryEnum.PostgreSQL:
                     builder.UseNpgsql(connection);
                     break;
             }

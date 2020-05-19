@@ -5,7 +5,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 using Drypoint.MVC.Auths;
+using Drypoint.Unity;
 using IdentityModel;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
@@ -17,6 +19,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Drypoint.MVC
 {
@@ -67,49 +70,38 @@ namespace Drypoint.MVC
                 options.Scope.Add(OidcConstants.StandardScopes.Profile);
                 options.Scope.Add(OidcConstants.StandardScopes.Email);
                 options.Scope.Add(OidcConstants.StandardScopes.Phone);
+                options.Scope.Add(DrypointConsts.RolesScope);
 
-                //options.Scope.Add(OidcConstants.StandardScopes.OfflineAccess);
+                options.Scope.Add(OidcConstants.StandardScopes.OfflineAccess);
 
-                //// 集合里的东西 都是要被过滤掉的属性，nbf amr exp...
-                //options.ClaimActions.Remove("nbf");
-                //options.ClaimActions.Remove("amr");
-                //options.ClaimActions.Remove("exp");
+                ////集合里的东西 都是要被过滤掉的属性，nbf amr exp...
+                options.ClaimActions.Remove("nbf");
+                options.ClaimActions.Remove("amr");
+                options.ClaimActions.Remove("exp");
 
-                //// 不映射到User Claims里
+                ////不映射到User Claims里
                 //options.ClaimActions.DeleteClaim("sid");
                 //options.ClaimActions.DeleteClaim("sub");
                 //options.ClaimActions.DeleteClaim("idp");
 
-                //// 让Claim里面的角色成为mvc系统识别的角色
-                //options.TokenValidationParameters = new TokenValidationParameters
-                //{
-                //    NameClaimType = JwtClaimTypes.Name,
-                //    RoleClaimType = JwtClaimTypes.Role
-                //};
-
-                options.Events = new OpenIdConnectEvents()
+                // 让Claim里面的角色成为mvc系统识别的角色
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    //授权被用户拒绝之后友好提示页面
-                    OnRemoteFailure = context =>
-                    {
-                        //跳到错误指示页面
-                        context.Response.Redirect("/");
-                        context.HandleResponse();
-                        return Task.FromResult(0);
-                    }
+                    NameClaimType = JwtClaimTypes.Name,
+                    RoleClaimType = JwtClaimTypes.Role
                 };
             });
 
-            services.AddSingleton<IAuthorizationRequirement, SmithInSomewareRequirement>();
-            services.AddSingleton<IAuthorizationHandler, SmithInSomewhereHandler>();
+            //services.AddSingleton<IAuthorizationRequirement, SmithInSomewareRequirement>();
+            //services.AddSingleton<IAuthorizationHandler, SmithInSomewhereHandler>();
 
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("SmithInSomewhere", builder =>
-                {
-                    builder.AddRequirements(new SmithInSomewareRequirement());
-                });
-            });
+            //services.AddAuthorization(options =>
+            //{
+            //    //options.AddPolicy("SmithInSomewhere", builder =>
+            //    //{
+            //    //    builder.AddRequirements(new SmithInSomewareRequirement());
+            //    //});
+            //});
 
         }
 

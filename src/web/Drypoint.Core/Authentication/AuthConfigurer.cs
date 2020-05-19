@@ -45,20 +45,20 @@ namespace Drypoint.Core.Authentication
                 //客户端设置 AccessTokenType为Reference时需要API提供认证身份认证
                 services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 //资源端
-                .AddIdentityServerAuthentication(options =>
-                {
-                    //options.JwtValidationClockSkew = TimeSpan.Zero;
-                    options.Authority = authManagement.IdentityServer.Authority;
-                    options.ApiName = authManagement.IdentityServer.ApiName;
-                    options.ApiSecret = authManagement.IdentityServer.ApiSecret;
-                    options.RequireHttpsMetadata = false;
-                    options.JwtValidationClockSkew = TimeSpan.FromSeconds(0);  //验证token间隔时间
-                    //待测试
-                    //options.JwtBearerEvents = new JwtBearerEvents
-                    //{
-                    //    OnMessageReceived = QueryStringTokenResolver
-                    //};
-                });
+                        .AddIdentityServerAuthentication(options =>
+                        {
+                            //options.JwtValidationClockSkew = TimeSpan.Zero;
+                            options.Authority = authManagement.IdentityServer.Authority;
+                            options.ApiName = authManagement.IdentityServer.ApiName;
+                            options.ApiSecret = authManagement.IdentityServer.ApiSecret;
+                            options.RequireHttpsMetadata = false;
+                            options.JwtValidationClockSkew = TimeSpan.FromSeconds(0);  //验证token间隔时间
+                            //待测试
+                            //options.JwtBearerEvents = new JwtBearerEvents
+                            //{
+                            //    OnMessageReceived = QueryStringTokenResolver
+                            //};
+                        });
             }
             else
             {
