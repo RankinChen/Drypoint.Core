@@ -23,6 +23,7 @@ namespace Drypoint.Core.IdentityServer
                 new ApiResource("Drypoint_Host_API", "Drypoint Host API(All)")
                 {
                     Description="所有的API包括前端和后端",
+                    UserClaims= { JwtClaimTypes.Name, JwtClaimTypes.Role },
                     ApiSecrets = { new Secret("Drypoint_Host_API_6E183983F7654289AE79077DDD28C3B4".Sha256()) }
                 }
             };
