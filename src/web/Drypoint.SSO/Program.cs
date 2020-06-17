@@ -6,6 +6,8 @@ using NLog.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Hosting;
 using Autofac.Extensions.DependencyInjection;
+using Drypoint.Core.Configuration;
+using System.Threading.Tasks;
 
 namespace Drypoint.SSO
 {
@@ -13,22 +15,15 @@ namespace Drypoint.SSO
     {
         private static string _environmentName;
 
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            await CreateHostBuilder(args).Build().RunWithTasksAsync();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
             .UseServiceProviderFactory(new AutofacServiceProviderFactory())  //注册Autofac
-            //.ConfigureHostConfiguration(configHost =>
-            //{
-            //    configHost.SetBasePath(Directory.GetCurrentDirectory());
-            //    configHost.AddJsonFile("hostsettings.json", optional: true);
-            //    configHost.AddEnvironmentVariables(prefix: "DOTNET_");
-            //    configHost.AddCommandLine(args);
-            //})
-            .UseContentRoot(Directory.GetCurrentDirectory()) 
+            .UseContentRoot(Directory.GetCurrentDirectory())
             .ConfigureLogging((hostingContext, logBuilder) =>
             {
                 _environmentName = hostingContext.HostingEnvironment.EnvironmentName;

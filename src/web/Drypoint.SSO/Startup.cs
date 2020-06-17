@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Autofac;
 using Drypoint.Application.AutoMapper;
+using Drypoint.Unity.EnumCollection;
 
 namespace Drypoint.SSO
 {
@@ -80,6 +81,10 @@ namespace Drypoint.SSO
                         .AllowCredentials();
                 });
             });
+
+            #region SQL
+            services.AddDbContextConfigurer(Configuration, DBCategoryEnum.PostgreSQL);
+            #endregion
 
             //设置https重定向端口
             services.AddHttpsRedirection(options =>

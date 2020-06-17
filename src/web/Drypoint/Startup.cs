@@ -19,6 +19,7 @@ using Autofac;
 using Drypoint.Core.Authentication;
 using System.Linq;
 using Drypoint.Application.AutoMapper;
+using Drypoint.Unity.EnumCollection;
 
 namespace Drypoint
 {
@@ -91,6 +92,10 @@ namespace Drypoint
                         .AllowCredentials(); //不要和AllowAnyOrigin同时使用
                 });
             });
+            #endregion
+
+            #region SQL
+            services.AddDbContextConfigurer(Configuration, DBCategoryEnum.PostgreSQL);
             #endregion
 
             //设置https重定向端口

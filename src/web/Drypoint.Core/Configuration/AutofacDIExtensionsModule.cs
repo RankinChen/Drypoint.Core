@@ -20,7 +20,7 @@ namespace Drypoint.Core.Configuration
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
-            builder.RegisterType<DrypointDbContextFactory>().As<IDesignTimeDbContextFactory<DrypointDbContext>>().InstancePerLifetimeScope();
+
             builder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>)).SingleInstance();
             builder.RegisterGeneric(typeof(DrypointBaseRepository<,>)).As(typeof(IRepository<,>)).InstancePerLifetimeScope();
 

@@ -30,7 +30,6 @@ namespace Drypoint.Core.Configuration
             try
             {
                 services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-                services.TryAddScoped(typeof(IDesignTimeDbContextFactory<DrypointDbContext>), typeof(DrypointDbContextFactory));
                 services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
                 services.TryAddScoped(typeof(IRepository<,>), typeof(DrypointBaseRepository<,>));
                 AddCommonService(services);
