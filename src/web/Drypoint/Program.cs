@@ -26,7 +26,6 @@ namespace Drypoint
             //    configHost.AddEnvironmentVariables(prefix: "DOTNET_");
             //    configHost.AddCommandLine(args);
             //})
-            .UseContentRoot(Directory.GetCurrentDirectory())
             .ConfigureLogging((hostingContext, logBuilder) =>
             {
                 _environmentName = hostingContext.HostingEnvironment.EnvironmentName;

@@ -17,7 +17,7 @@ namespace Drypoint.EntityFrameworkCore.Repositories
     public class DrypointBaseRepository<TEntity, TPrimaryKey> : BaseRepository<TEntity, TPrimaryKey>
         where TEntity : class, IEntity<TPrimaryKey>
     {
-        public virtual DrypointDbContext Context => _dbContextProvider.CreateDbContext(null);
+        public virtual DrypointDbContext Context => _dbContextProvider;
 
         /// <summary>
         /// Gets DbSet for given entity.
@@ -39,13 +39,13 @@ namespace Drypoint.EntityFrameworkCore.Repositories
             }
         }
 
-        private readonly IDesignTimeDbContextFactory<DrypointDbContext> _dbContextProvider;
+        private readonly DrypointDbContext _dbContextProvider;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="dbContextProvider"></param>
-        public DrypointBaseRepository(IDesignTimeDbContextFactory<DrypointDbContext> dbContextProvider)
+        public DrypointBaseRepository(DrypointDbContext dbContextProvider)
         {
             _dbContextProvider = dbContextProvider;
         }

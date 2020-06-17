@@ -3,17 +3,17 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:8312",
-      "sslPort": 44333
+      "applicationUrl": "http://localhost:5000"
+      //"sslPort": 5001
     }
   },
   "profiles": {
     "IIS Express": {
         "commandName": "IISExpress",
         "launchBrowser": true,
-        "environmentVariables": {
-            "ASPNETCORE_ENVIRONMENT": "Development"
-        },
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
         "ancmHostingModel": "OutOfProcess"
     },
     "Drypoint.SSO": {

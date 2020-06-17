@@ -71,11 +71,11 @@ namespace Drypoint.Core.IdentityServer
                     },
                     //登录成功后返回的客户端地址
                     RedirectUris= {
-                        "https://localhost:44332/swagger/oauth2-redirect.html"
+                        "http://localhost:60000/swagger/oauth2-redirect.html"
                     },
                     //注销登录后返回的客户端地址
                     PostLogoutRedirectUris={
-                        "https://localhost:44332/swagger/oauth2-redirect.html"
+                        "http://localhost:60000/swagger/oauth2-redirect.html"
                     },
                     //详见:IdentityServerConstants.StandardScopes
                     AllowedScopes={
@@ -107,12 +107,12 @@ namespace Drypoint.Core.IdentityServer
                     //登录成功后返回的客户端地址
                     RedirectUris={
                         "http://localhost:7000/signin-oidc" 
-                        // "https://localhost:44332/swagger/index.html"  
+                        // "https://localhost:60000/swagger/index.html"  
                     },
                     //注销登录后返回的客户端地址
                     PostLogoutRedirectUris={
                         "http://localhost:7000/signout-callback-oidc"
-                            //"https://localhost:44332/swagger/index.html"
+                            //"https://localhost:60000/swagger/index.html"
                     },
                     AlwaysIncludeUserClaimsInIdToken= true,
                     AllowOfflineAccess= true,

@@ -107,13 +107,8 @@ namespace Drypoint
             services.AddDbContextConfigurer(Configuration, DBCategoryEnum.PostgreSQL);
             #endregion
 
+            #region https
             //设置https重定向端口
-            services.AddHttpsRedirection(options =>
-            {
-                options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
-                options.HttpsPort = 443;
-            });
-
             services.AddHsts(options =>
             {
                 options.Preload = true;
@@ -121,6 +116,12 @@ namespace Drypoint
                 options.MaxAge = TimeSpan.FromDays(60);
                 options.ExcludedHosts.Add("example.com");
             });
+            services.AddHttpsRedirection(options =>
+            {
+                options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
+                options.HttpsPort = 443;
+            });
+            #endregion
 
             //扩展方法 注册IdentityServer或者JWT认证
             AuthConfigurer.Configure(services, Configuration);
@@ -164,13 +165,14 @@ namespace Drypoint
                     });
                 });
                 app.UseHsts();
+
+                //开启HTTPS重定向
+                app.UseHttpsRedirection();
             }
 
             //CORS
             app.UseCors(LocalCorsPolicyName);
 
-            //开启HTTPS重定向
-            app.UseHttpsRedirection();
 
             //访问静态文件
             app.UseStaticFiles();

@@ -88,21 +88,19 @@ namespace Drypoint.SSO
             services.AddDbContextConfigurer(Configuration, DBCategoryEnum.PostgreSQL);
             #endregion
 
-            #region AutoMapper设置https重定向端口
-            services.AddHttpsRedirection(options =>
-            {
-                options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
-                options.HttpsPort = 443;
-            });
-            #endregion
-
-            #region//是否启用HTTP严格传输安全协议(HSTS)
+            #region https
+            //设置https重定向端口
             services.AddHsts(options =>
             {
                 options.Preload = true;
                 options.IncludeSubDomains = true;
                 options.MaxAge = TimeSpan.FromDays(60);
                 options.ExcludedHosts.Add("example.com");
+            });
+            services.AddHttpsRedirection(options =>
+            {
+                options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
+                options.HttpsPort = 443;
             });
             #endregion
 
@@ -123,8 +121,9 @@ namespace Drypoint.SSO
                 //    CustomRedirectReturnUrlParameter = "ReturnUrl",
                 //    CookieMessageThreshold = 5
                 //};
-            }).AddDeveloperSigningCredential()        //使用演示签名证书
-            //.AddSigningCredential(new X509Certificate2(Path.Combine(AppContext.BaseDirectory, Configuration["Certs:Path"]), Configuration["Certs:Pwd"]))
+            })
+              .AddDeveloperSigningCredential()        //使用演示签名证书
+              //.AddSigningCredential(new X509Certificate2(Path.Combine(environment.ContentRootPath;, Configuration["Certs:Path"]), Configuration["Certs:Pwd"]))
               .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources())
               .AddInMemoryApiResources(IdentityServerConfig.GetApiResources())
               .AddInMemoryClients(IdentityServerConfig.GetClients())
@@ -160,10 +159,10 @@ namespace Drypoint.SSO
             builder.RegisterModule(new AutofacDIExtensionsModule());
         }
 
-        public void Configure(IApplicationBuilder app, IHostEnvironment env, ILogger<Startup> logger)
+        public void Configure(IApplicationBuilder app, ILogger<Startup> logger)
         {
             logger.LogInformation("Begin Startup Configure......");
-            if (env.IsDevelopment())
+            if (Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -187,13 +186,11 @@ namespace Drypoint.SSO
                     });
                 });// this will add the global exception handle for production evironment.
                 app.UseHsts();
+                //开启HTTPS重定向
+                app.UseHttpsRedirection();
             }
 
             app.UseCors(LocalCorsPolicyName); //Enable CORS!
-
-            //开启HTTPS重定向
-            app.UseHttpsRedirection();
-
             //授权相关：服务端代码
             app.UseIdentityServer();
 

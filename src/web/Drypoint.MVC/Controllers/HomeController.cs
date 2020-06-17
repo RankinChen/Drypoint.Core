@@ -35,7 +35,7 @@ namespace Drypoint.MVC.Controllers
         {
             var client = _clientFactory.CreateClient();
 
-            var disco = await client.GetDiscoveryDocumentAsync("https://localhost:44333");
+            var disco = await client.GetDiscoveryDocumentAsync("http://localhost:5000");
             if (disco.IsError)
             {
                 throw new Exception(disco.Error);
@@ -45,7 +45,7 @@ namespace Drypoint.MVC.Controllers
 
             client.SetBearerToken(accessToken);
 
-            var response = await client.GetAsync("https://localhost:44332/Identity");
+            var response = await client.GetAsync("http://localhost:60000/Identity");
 
             //if (!response.IsSuccessStatusCode)
             //{
@@ -88,7 +88,7 @@ namespace Drypoint.MVC.Controllers
         private async Task<string> RenewTokensAsync()
         {
             var client = new HttpClient();
-            var disco = await client.GetDiscoveryDocumentAsync("https://localhost:44333");
+            var disco = await client.GetDiscoveryDocumentAsync("http://localhost:5000");
             if (disco.IsError)
             {
                 throw new Exception(disco.Error);

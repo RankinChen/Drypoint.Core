@@ -182,19 +182,21 @@ namespace Drypoint.Core.Configuration
             app.UseOpenApi();
             app.UseSwaggerUi3(config =>
              {
-                 config.OAuth2Client = new OAuth2ClientSettings
-                 {
-                     ClientId = configuration["IdentityServer:Client:ClientId"],
-                     ClientSecret = configuration["IdentityServer:Client:ClientSecret"],
-                     AppName = "API 端测试授权",
-                     //在授权认证的时候地址栏后面添加请求参数 
-                     /*
-                     AdditionalQueryStringParameters = {
-                         {"response_type","code id_token" },
-                         { "redirect_uri","http://localhost:7000/signin-oidc"}
-                     }
-                     */
-                 };
+                 if (configuration.GetValue<bool>("SwaggerDoc:Authorize:IsShow", false)) {
+                     config.OAuth2Client = new OAuth2ClientSettings
+                     {
+                         ClientId = configuration["SwaggerDoc:Authorize:Client:ClientId"],
+                         ClientSecret = configuration["SwaggerDoc:Authorize:Client:ClientSecret"],
+                         AppName = "API 端测试授权",
+                         //在授权认证的时候地址栏后面添加请求参数 
+                         /*
+                         AdditionalQueryStringParameters = {
+                             {"response_type","code id_token" },
+                             { "redirect_uri","http://localhost:7000/signin-oidc"}
+                         }
+                         */
+                     };
+                 }
              });
         }
     }

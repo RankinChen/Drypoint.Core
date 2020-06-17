@@ -23,7 +23,6 @@ namespace Drypoint.SSO
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
             .UseServiceProviderFactory(new AutofacServiceProviderFactory())  //注册Autofac
-            .UseContentRoot(Directory.GetCurrentDirectory())
             .ConfigureLogging((hostingContext, logBuilder) =>
             {
                 _environmentName = hostingContext.HostingEnvironment.EnvironmentName;
