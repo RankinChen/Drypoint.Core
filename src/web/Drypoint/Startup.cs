@@ -20,6 +20,7 @@ using Drypoint.Core.Authentication;
 using System.Linq;
 using Drypoint.Application.AutoMapper;
 using Drypoint.Unity.EnumCollection;
+using Drypoint.Unity.OptionsConfigModels;
 
 namespace Drypoint
 {
@@ -52,9 +53,17 @@ namespace Drypoint
 
             #region CSRedisCache
             //初始化缓存 参考 https://github.com/2881099/csredis
-            CSRedisClient csredis = new CSRedisClient(Configuration["RedisConnectionString"]);
-            services.AddSingleton(csredis);
-            services.AddSingleton<IDistributedCache>(new CSRedisCache(csredis));
+
+            var redisConnection = Configuration.GetSection("Redis").Get<RedisConnection>();
+            if (redisConnection.IsEnabled)
+            {
+                var csredis = new CSRedis.CSRedisClient(@$"{redisConnection.ConnectionString}
+                                                        ,defaultDatabase={redisConnection.DatabaseId}
+                                                        ,prefix={redisConnection.Prefix}");
+                RedisHelper.Initialization(csredis);
+                services.AddSingleton<IDistributedCache>(new CSRedisCache(RedisHelper.Instance));
+                services.AddDistributedMemoryCache();
+            }
             #endregion
 
             #region MVC

@@ -19,10 +19,8 @@ namespace Drypoint.Core.Configuration
         /// <param name="configuration"></param>
         public static void AddCustomOptions(this IServiceCollection services, IConfiguration configuration)
         {
-            
             services.Configure<AuthManagement>(configuration.GetSection("Authentication"));
-
-
+            services.Configure<RedisConnection>(configuration.GetSection("Redis"));
         }
     }
 }

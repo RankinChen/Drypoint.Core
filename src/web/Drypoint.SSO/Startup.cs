@@ -35,16 +35,16 @@ namespace Drypoint.SSO
         {
             services.AddHttpClient();
 
-            //AutoMapper 
+            #region AutoMapper
             services.AddAutoMapper(cfg =>
             {
                 cfg.AddProfile<AutoMapperConfig>();
             }, AppDomain.CurrentDomain.GetAssemblies());
-
+            #endregion
             //DI
             //services.AddServiceRegister();
 
-            //MVC
+            # region MVC
             services.AddControllersWithViews();
             services.AddMvc(options =>
             {
@@ -60,8 +60,9 @@ namespace Drypoint.SSO
 
             })
             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            #endregion
 
-            //Configure CORS for APP
+            #region CORS
             services.AddCors(options =>
             {
                 options.AddPolicy(LocalCorsPolicyName, builder =>
@@ -81,19 +82,21 @@ namespace Drypoint.SSO
                         .AllowCredentials();
                 });
             });
+            #endregion
 
             #region SQL
             services.AddDbContextConfigurer(Configuration, DBCategoryEnum.PostgreSQL);
             #endregion
 
-            //设置https重定向端口
+            #region AutoMapper设置https重定向端口
             services.AddHttpsRedirection(options =>
             {
                 options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
                 options.HttpsPort = 443;
             });
+            #endregion
 
-            //是否启用HTTP严格传输安全协议(HSTS)
+            #region//是否启用HTTP严格传输安全协议(HSTS)
             services.AddHsts(options =>
             {
                 options.Preload = true;
@@ -101,6 +104,7 @@ namespace Drypoint.SSO
                 options.MaxAge = TimeSpan.FromDays(60);
                 options.ExcludedHosts.Add("example.com");
             });
+            #endregion
 
             //授权相关：服务端代码
             services.AddIdentityServer(options =>
