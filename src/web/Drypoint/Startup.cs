@@ -41,7 +41,8 @@ namespace Drypoint
         {
             //配置选项模式读取配置文件
             services.AddCustomOptions(Configuration);
-
+            //注册Http上下文访问服务
+            services.AddHttpContextAccessor();
             services.AddHttpClient();
             //AutoMapper 
             #region AutoMapper
@@ -63,6 +64,10 @@ namespace Drypoint
                 RedisHelper.Initialization(csredis);
                 services.AddSingleton<IDistributedCache>(new CSRedisCache(RedisHelper.Instance));
                 services.AddDistributedMemoryCache();
+            }
+            else {
+                //注册内存缓存
+                services.AddMemoryCache();
             }
             #endregion
 
