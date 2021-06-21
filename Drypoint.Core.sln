@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31229.75
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Drypoint.Core", "Drypoint.Core.API\Drypoint.Core.csproj", "{70B8876A-86EC-4C44-948E-F5CFFD39827A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unity", "Unity", "{F7563363-8977-4D4E-A0A1-046C1E8739F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Drypoint.Unity", "Drypoint.Unity\Drypoint.Unity\Drypoint.Unity.csproj", "{CD2DBEC5-C7BD-4168-8F73-418444442AAA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{70B8876A-86EC-4C44-948E-F5CFFD39827A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70B8876A-86EC-4C44-948E-F5CFFD39827A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70B8876A-86EC-4C44-948E-F5CFFD39827A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70B8876A-86EC-4C44-948E-F5CFFD39827A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD2DBEC5-C7BD-4168-8F73-418444442AAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD2DBEC5-C7BD-4168-8F73-418444442AAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD2DBEC5-C7BD-4168-8F73-418444442AAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD2DBEC5-C7BD-4168-8F73-418444442AAA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CD2DBEC5-C7BD-4168-8F73-418444442AAA} = {F7563363-8977-4D4E-A0A1-046C1E8739F5}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {61298462-C630-4615-B940-0A84F529C045}
+	EndGlobalSection
+EndGlobal

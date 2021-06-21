@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "lc36mwLI4nZPKZnNyyjzTljbrZFYuWwIz75cPUbf/Pze/vJGtzk5ukeE5vfel3UYG82yqXWWXJ2jmhDhJsJxTQ==",
+  "success": true,
+  "projectFilePath": "G:\\WorkFile\\MySource\\Drypoint\\Drypoint.Core\\Drypoint.Unity\\Drypoint.Unity\\Drypoint.Unity.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\lang\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}
