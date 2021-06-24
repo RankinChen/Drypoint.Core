@@ -1,9 +1,0 @@
-G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Unity\Drypoint.Unity\bin\Debug\netcoreapp3.1\Drypoint.Unity.deps.json
-G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Unity\Drypoint.Unity\bin\Debug\netcoreapp3.1\Drypoint.Unity.dll
-G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Unity\Drypoint.Unity\bin\Debug\netcoreapp3.1\Drypoint.Unity.pdb
-G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Unity\Drypoint.Unity\obj\Debug\netcoreapp3.1\Drypoint.Unity.csprojAssemblyReference.cache
-G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Unity\Drypoint.Unity\obj\Debug\netcoreapp3.1\Drypoint.Unity.AssemblyInfoInputs.cache
-G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Unity\Drypoint.Unity\obj\Debug\netcoreapp3.1\Drypoint.Unity.AssemblyInfo.cs
-G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Unity\Drypoint.Unity\obj\Debug\netcoreapp3.1\Drypoint.Unity.csproj.CoreCompileInputs.cache
-G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Unity\Drypoint.Unity\obj\Debug\netcoreapp3.1\Drypoint.Unity.dll
-G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Unity\Drypoint.Unity\obj\Debug\netcoreapp3.1\Drypoint.Unity.pdb

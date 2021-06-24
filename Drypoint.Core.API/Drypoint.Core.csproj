@@ -20,6 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Drypoint.Unity\Drypoint.Unity\Drypoint.Unity.csproj" />
+    <ProjectReference Include="..\Drypoint.Unity\Drypoint.Unity.csproj" />
   </ItemGroup>
 </Project>
