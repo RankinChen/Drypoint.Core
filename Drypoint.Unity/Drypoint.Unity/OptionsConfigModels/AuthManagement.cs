@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -24,35 +23,24 @@ namespace Drypoint.Unity.OptionsConfigModels
 
     public class IdentityServer
     {
-        [JsonProperty("IsEnabled")]
         public bool IsEnabled { get; set; }
-        [JsonProperty("Authority")]
         public string Authority { get; set; }
-        [JsonProperty("ApiName")]
         public string ApiName { get; set; }
-        [JsonProperty("ApiSecret")]
         public string ApiSecret { get; set; }
 
     }
 
     public class JwtBearer
     {
-        [JsonProperty("IsEnabled")]
         public bool IsEnabled { get; set; }
-
-        [JsonProperty("SecurityKey")]
         public string SecurityKey { get; set; }
 
-        [JsonProperty("Issuer")]
         public string Issuer { get; set; }
 
-        [JsonProperty("Audience")]
         public string Audience { get; set; }
 
-        [JsonProperty("AccessExpiration")]
         public int AccessExpiration { get; set; }
 
-        [JsonProperty("RefreshExpiration")]
         public int RefreshExpiration { get; set; }
     }
 }

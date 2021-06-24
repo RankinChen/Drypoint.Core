@@ -20,6 +20,7 @@ namespace Drypoint.Core.Extensions.Configurations
         public static void AddCustomOptions(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<AuthManagement>(configuration.GetSection("Authentication"));
+            services.Configure<SwaggerDocConfig>(configuration.GetSection("SwaggerDoc"));
         }
     }
 }

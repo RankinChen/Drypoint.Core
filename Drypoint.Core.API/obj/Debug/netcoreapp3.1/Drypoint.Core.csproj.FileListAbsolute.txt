@@ -1,6 +1,5 @@
 G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Core.API\bin\Debug\netcoreapp3.1\AutoMapper.dll
 G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Core.API\bin\Debug\netcoreapp3.1\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
-G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Core.API\bin\Debug\netcoreapp3.1\Microsoft.DotNet.PlatformAbstractions.dll
 G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Core.API\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.dll
 G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Core.API\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.Abstractions.dll
 G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Core.API\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.Binder.dll
@@ -56,3 +55,16 @@ G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Core.API\obj\Debug\netcorea
 G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Core.API\obj\Debug\netcoreapp3.1\Drypoint.Core.dll
 G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Core.API\obj\Debug\netcoreapp3.1\Drypoint.Core.pdb
 G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Core.API\obj\Debug\netcoreapp3.1\Drypoint.Core.genruntimeconfig.cache
+G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Core.API\obj\Debug\netcoreapp3.1\Drypoint.Core.MvcApplicationPartsAssemblyInfo.cs
+G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Core.API\bin\Debug\netcoreapp3.1\Drypoint.Core.xml
+G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Core.API\bin\Debug\netcoreapp3.1\Microsoft.DotNet.PlatformAbstractions.dll
+G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Core.API\bin\Debug\netcoreapp3.1\Namotion.Reflection.dll
+G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Core.API\bin\Debug\netcoreapp3.1\NJsonSchema.dll
+G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Core.API\bin\Debug\netcoreapp3.1\NJsonSchema.Yaml.dll
+G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Core.API\bin\Debug\netcoreapp3.1\NSwag.Annotations.dll
+G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Core.API\bin\Debug\netcoreapp3.1\NSwag.AspNetCore.dll
+G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Core.API\bin\Debug\netcoreapp3.1\NSwag.Core.dll
+G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Core.API\bin\Debug\netcoreapp3.1\NSwag.Core.Yaml.dll
+G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Core.API\bin\Debug\netcoreapp3.1\NSwag.Generation.dll
+G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Core.API\bin\Debug\netcoreapp3.1\NSwag.Generation.AspNetCore.dll
+G:\WorkFile\MySource\Drypoint\Drypoint.Core\Drypoint.Core.API\bin\Debug\netcoreapp3.1\YamlDotNet.dll

@@ -42,6 +42,9 @@ namespace Drypoint.Core
 
             //扩展方法 注册IdentityServer或者JWT认证
             AuthConfigurer.Configure(services, Configuration);
+
+            //Swagger
+            services.AddCustomSwaggerGen(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,6 +54,8 @@ namespace Drypoint.Core
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCustomSwaggerUI(Configuration);
 
             app.UseHttpsRedirection();
 
