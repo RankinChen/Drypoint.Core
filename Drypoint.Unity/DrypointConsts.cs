@@ -10,12 +10,12 @@ namespace Drypoint.Unity
         /// <summary>
         /// 数据库连接字符串
         /// </summary>
-        public const string ConnectionStringName = "Default";
+        public const string Default_ConnectionStringName = "Default";
 
         /// <summary>
-        /// 数据库连接字符串（PostgreSQL）
+        /// 数据库连接字符串
         /// </summary>
-        public const string ConnectionStringName_PostgreSQL = "PostgreSQL";
+        public const string IdsDB_ConnectionStringName = "IdsDB";
         #endregion
 
         #region 接口定义相关

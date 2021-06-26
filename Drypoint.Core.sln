@@ -9,6 +9,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unity", "Unity", "{F7563363
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Drypoint.Unity", "Drypoint.Unity\Drypoint.Unity.csproj", "{CD2DBEC5-C7BD-4168-8F73-418444442AAA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Model", "Model", "{1695F9BF-1F46-4076-A524-594A503A1D38}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Drypoint.Model", "Drypoint.Model\Drypoint.Model.csproj", "{1EC34CE9-00B5-459C-8414-53793395141D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,12 +27,17 @@ Global
 		{CD2DBEC5-C7BD-4168-8F73-418444442AAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD2DBEC5-C7BD-4168-8F73-418444442AAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD2DBEC5-C7BD-4168-8F73-418444442AAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EC34CE9-00B5-459C-8414-53793395141D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EC34CE9-00B5-459C-8414-53793395141D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EC34CE9-00B5-459C-8414-53793395141D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EC34CE9-00B5-459C-8414-53793395141D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{CD2DBEC5-C7BD-4168-8F73-418444442AAA} = {F7563363-8977-4D4E-A0A1-046C1E8739F5}
+		{1EC34CE9-00B5-459C-8414-53793395141D} = {1695F9BF-1F46-4076-A524-594A503A1D38}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {61298462-C630-4615-B940-0A84F529C045}
