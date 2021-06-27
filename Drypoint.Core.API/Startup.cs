@@ -34,7 +34,6 @@ namespace Drypoint.Core
         }
 
         public IConfiguration Configuration { get; }
-        public static IFreeSql freeSql { get; private set; }
 
         readonly string LocalCorsPolicyName = "localhostCORS";
 
@@ -49,15 +48,13 @@ namespace Drypoint.Core
 
             var authManagement = Configuration.GetSection("Authentication").Get<AuthManagement>();
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                });
 
             //AutoMapper 
-            #region AutoMapper
-            services.AddAutoMapper(cfg =>
-            {
-                cfg.AddProfile<MappingProfile>();
-            }, AppDomain.CurrentDomain.GetAssemblies());
-            #endregion
+            services.AddCustomAutoMapper();
 
             //当前用户
             #region 当前用户信息
