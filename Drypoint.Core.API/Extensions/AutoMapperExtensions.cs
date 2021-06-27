@@ -7,8 +7,15 @@ using System.Threading.Tasks;
 
 namespace Drypoint.Core.Extensions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class AutoMapperExtensions
     {
+        /// <summary>
+        /// 注入AutoMapper Profile
+        /// </summary>
+        /// <param name="services"></param>
         public static void AddCustomAutoMapper(this IServiceCollection services)
         {
             var profileTypes =

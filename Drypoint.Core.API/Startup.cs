@@ -37,7 +37,7 @@ namespace Drypoint.Core
 
         readonly string LocalCorsPolicyName = "localhostCORS";
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        
         public void ConfigureServices(IServiceCollection services)
         {
             //配置选项模式读取配置文件
