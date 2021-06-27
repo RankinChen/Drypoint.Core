@@ -3,6 +3,7 @@ using Drypoint.Core.Extensions;
 using Drypoint.Core.Extensions.Authentication;
 using Drypoint.Core.Extensions.AutoMappers;
 using Drypoint.Core.Extensions.BaseServices;
+using Drypoint.Core.Extensions.BaseServices.StartupTask;
 using Drypoint.Core.Extensions.Configurations;
 using Drypoint.Unity.BaseServices;
 using Drypoint.Unity.OptionsConfigModels;
@@ -40,6 +41,8 @@ namespace Drypoint.Core
         
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IStartupTask, InitDBStartup>();
+
             //配置选项模式读取配置文件
             services.AddCustomOptions(Configuration);
 
@@ -84,7 +87,6 @@ namespace Drypoint.Core
                 });
             });
             #endregion
-
 
             #region FreeSql
             services.AddFreeSql(Configuration);

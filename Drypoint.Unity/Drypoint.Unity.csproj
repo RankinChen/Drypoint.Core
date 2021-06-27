@@ -10,8 +10,4 @@
     <PackageReference Include="Yitter.IdGenerator" Version="1.0.12" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="MemoryCache\" />
-  </ItemGroup>
-
 </Project>
