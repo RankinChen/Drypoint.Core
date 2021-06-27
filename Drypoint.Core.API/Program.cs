@@ -1,3 +1,5 @@
+using Autofac.Extensions.DependencyInjection;
+using Drypoint.Core.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -13,7 +15,7 @@ namespace Drypoint.Core
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             Console.Title = "Drypoint.Core.API";
             Log.Logger = new LoggerConfiguration()
@@ -33,14 +35,28 @@ namespace Drypoint.Core
                         outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
                 .CreateLogger();
 
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+
+            await host.RunWithTasksAsync();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.ConfigureAppConfiguration((hostingContext, config) =>
+                    {
+                        //var env = hostingContext.HostingEnvironment;
+                        //根据环境变量加载不同的JSON配置
+                        config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                            .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json",
+                                optional: true, reloadOnChange: true)
+                            .AddUserSecrets<Program>();
+                        //从环境变量添加配置
+                        //config.AddEnvironmentVariables("DOTNET_");
+                    })
+                    .UseStartup<Startup>();
                 }).UseSerilog();
     }
 }
