@@ -12,7 +12,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
-namespace Drypoint.Core.Extensions.Configurations
+namespace Drypoint.Core.Extensions
 {
     public static class SwaggerDocExtensions
     {

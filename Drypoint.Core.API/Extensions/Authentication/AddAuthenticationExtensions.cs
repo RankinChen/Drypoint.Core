@@ -17,9 +17,9 @@ using System.Threading.Tasks;
 
 namespace Drypoint.Core.Extensions.Authentication
 {
-    public static class AuthConfigurer
+    public static class AddAuthenticationExtensions
     {
-        public static void Configure(IServiceCollection services, IConfiguration configuration)
+        public static void AuthConfigurer(this IServiceCollection services, IConfiguration configuration)
         {
             var authManagement = configuration.GetSection("Authentication").Get<AuthManagement>();
 
@@ -37,7 +37,10 @@ namespace Drypoint.Core.Extensions.Authentication
                 //             options.Audience = authManagement.IdentityServer.ApiName;
                 //         });
                 //客户端设置 AccessTokenType为Reference时需要API提供认证身份认证
-                services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+                services.AddAuthentication(options =>
+                        {
+                            options.DefaultScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
+                        })
                         .AddIdentityServerAuthentication(options =>
                         {
                             //options.JwtValidationClockSkew = TimeSpan.Zero;
@@ -61,7 +64,6 @@ namespace Drypoint.Core.Extensions.Authentication
                 services.AddAuthentication(config =>
                 {
                     config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 }).AddJwtBearer(options =>
                 {
                     //是否需要HTTPS
@@ -78,7 +80,7 @@ namespace Drypoint.Core.Extensions.Authentication
 
                         ValidateIssuer = true,
                         ValidIssuer = authManagement.JwtBearer.Issuer,
-                        ValidateAudience = false,
+                        ValidateAudience = true,
                         ValidAudience = authManagement.JwtBearer.Audience,
 
                         ValidateLifetime = true,

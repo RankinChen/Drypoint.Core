@@ -12,7 +12,7 @@ namespace Drypoint.Core.Extensions.Configurations
 {
     public static class ConfigFreeSqlExtensions
     {
-        public static void  AddFreeSql(this IServiceCollection services, IConfiguration configuration)
+        public static void AddFreeSql(this IServiceCollection services, IConfiguration configuration)
         {
             IdleBus<DbNameType,IFreeSql> idleBus = new IdleBus<DbNameType,IFreeSql>(TimeSpan.FromMinutes(10));
 

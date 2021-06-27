@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Drypoint.Unity.Auth
+namespace Drypoint.Unity.BaseServices
 {
     /// <summary>
     /// 用户信息接口

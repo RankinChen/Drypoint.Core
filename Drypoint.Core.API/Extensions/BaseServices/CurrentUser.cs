@@ -1,16 +1,23 @@
-﻿using Drypoint.Unity.Auth;
+﻿using Drypoint.Unity.BaseServices;
 using Drypoint.Unity.Enums;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Drypoint.Core.Extensions.Authentication.Services
+namespace Drypoint.Core.Extensions.BaseServices
 {
+    /// <summary>
+    /// 当前用户信息
+    /// </summary>
     public class CurrentUser : ICurrentUser
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="httpContextAccessor"></param>
         public CurrentUser(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
