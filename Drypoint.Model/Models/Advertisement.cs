@@ -2,12 +2,10 @@
 using Drypoint.Model.Base.Auditing;
 using FreeSql.DataAnnotations;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Drypoint.Model.Models
 {
-    public class Advertisement: Entity<long>, ICreationAudited<long>
+    public class Advertisement: Entity, ICreationAudited<long>
     {
         /// <summary>
         /// 广告图片

@@ -2,12 +2,10 @@
 using Drypoint.Model.Base.Auditing;
 using FreeSql.DataAnnotations;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Drypoint.Model.Models
 {
-    public class PasswordLib : Entity<long>, ICreationAudited<long>, IModificationAudited<long>, ISoftDelete
+    public class PasswordLib : Entity, ICreationAudited<long>, IModificationAudited<long>, ISoftDelete
     {
         /// <summary>
         /// URL

@@ -56,31 +56,16 @@ namespace Drypoint.Core.Extensions.BaseServices.StartupTask
         /// <returns></returns>
         public static Type[] GetEntityTypes()
         {
-            List<string> assemblyNames = new List<string>()
-            {
-                "Drypoint.Model.Models"
-            };
+            var allAssemblyTypes = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(t => t.GetTypes())
+                .Where(t => !t.IsGenericType && t.IsClass && t.IsPublic && t.Namespace != null
+                            && t != typeof(Entity) && t != typeof(EntityFull) 
+                            && (typeof(IEntityFlag).IsAssignableFrom(t) || t.GetCustomAttribute<TableAttribute>() != null)
+                      ).ToList();
 
-            List<Type> entityTypes = new List<Type>();
+            allAssemblyTypes.RemoveAll(t => t.GetCustomAttribute<TableAttribute>()?.DisableSyncStructure ?? false);
 
-            foreach (var assemblyName in assemblyNames)
-            {
-                foreach (Type type in Assembly.Load(assemblyName).GetExportedTypes())
-                {
-                    foreach (Attribute attribute in type.GetCustomAttributes())
-                    {
-                        if (attribute is TableAttribute tableAttribute)
-                        {
-                            if (tableAttribute.DisableSyncStructure == false)
-                            {
-                                entityTypes.Add(type);
-                            }
-                        }
-                    }
-                }
-            }
-
-            return entityTypes.ToArray();
+            return allAssemblyTypes.ToArray();
         }
 
         /// <summary>
@@ -176,7 +161,7 @@ namespace Drypoint.Core.Extensions.BaseServices.StartupTask
                 }
             }
         }
-        
+
         /// <summary>
         /// 同步数据
         /// </summary>
@@ -305,7 +290,7 @@ namespace Drypoint.Core.Extensions.BaseServices.StartupTask
             }
         }
 
-        
+
         /// <summary>
         /// 初始化数据表数据
         /// </summary>

@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Drypoint.Model.Base.Auditing
 {
     /// <summary>
     /// 包含创建操作用户的Id 和创建时间
     /// </summary>
-    public interface ICreationAudited<TKey> where TKey : struct
+    public interface ICreationAudited<TKey> : IEntityFlag where TKey : struct
     {
         /// <summary>
         /// 创建用户Id

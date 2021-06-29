@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Drypoint.Model.Base
+﻿namespace Drypoint.Model.Base
 {
-    public interface ITenant
+    public interface ITenant : IEntityFlag
     {
         /// <summary>
         /// 租户Id

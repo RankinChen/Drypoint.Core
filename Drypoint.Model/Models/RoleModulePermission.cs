@@ -1,15 +1,11 @@
 ﻿using Drypoint.Model.Base;
-using Drypoint.Model.Base;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Drypoint.Model.Models
 {
     /// <summary>
     /// 角色跟权限关联表
     /// </summary>
-    public class RoleModulePermission:EntityFull<long>
+    public class RoleModulePermission:EntityFull
     {
         /// <summary>
         /// 角色ID

@@ -1,15 +1,12 @@
 ﻿using Drypoint.Model.Base;
 using FreeSql.DataAnnotations;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Drypoint.Model.Models
 {
     /// <summary>
     /// 博客文章
     /// </summary>
-    public class BlogArticle : EntityFull<long>
+    public class BlogArticle : EntityFull
     {
         /// <summary>
         /// 标题blog

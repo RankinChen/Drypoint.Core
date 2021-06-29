@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Drypoint.Model.Models
 {
-    public class UserRole:EntityFull<long>
+    public class UserRole:EntityFull
     {
         /// <summary>
         /// 用户ID

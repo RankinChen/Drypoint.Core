@@ -1,14 +1,11 @@
 ﻿using Drypoint.Model.Base;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Drypoint.Model.Models
 {
     /// <summary>
     /// 路由菜单表
     /// </summary>
-    public class Permission:Entity<long>
+    public class Permission:Entity
     {
         /// <summary>
         /// 上一级Id（null表示上一级无菜单）

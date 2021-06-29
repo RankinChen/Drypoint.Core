@@ -2,15 +2,13 @@
 using Drypoint.Model.Base.Auditing;
 using FreeSql.DataAnnotations;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Drypoint.Model.Models
 {
     /// <summary>
     /// 日志操作记录
     /// </summary>
-    public class OperateLog : Entity<long>, ICreationAudited<long>
+    public class OperateLog : Entity, ICreationAudited<long>
     {
         /// <summary>
         /// 区域名
