@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Drypoint.Model.Base
+﻿namespace Drypoint.Model.Base
 {
     /// <summary>
     /// 含是否激活属性
     /// </summary>
-    public interface IPassivable
+    public interface IPassivable : IEntityFlag
     {
         /// <summary>
         /// 是否激活

@@ -1,15 +1,12 @@
 ﻿using Drypoint.Model.Base;
 using FreeSql.DataAnnotations;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Drypoint.Model.Models
 {
     /// <summary>
     /// 接口API地址信息表
     /// </summary>
-    public class Module: EntityFull<long>
+    public class Module: EntityFull
     {
         /// <summary>
         /// 父ID

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Drypoint.Model.Models
 {
-    public class User : EntityFull<long>, IPassivable
+    public class User : EntityFull, IPassivable
     {
         /// <summary>
         /// 登录账号

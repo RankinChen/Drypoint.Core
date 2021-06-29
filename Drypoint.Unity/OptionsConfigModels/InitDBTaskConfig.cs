@@ -7,11 +7,6 @@ namespace Drypoint.Unity.OptionsConfigModels
     public class InitDBTaskConfig
     {
         /// <summary>
-        /// 生成数据
-        /// </summary>
-        public bool GenerateData { get; set; } = false;
-
-        /// <summary>
         /// 同步结构
         /// </summary>
         public bool SyncStructure { get; set; } = true;

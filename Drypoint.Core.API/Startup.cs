@@ -38,7 +38,7 @@ namespace Drypoint.Core
 
         readonly string LocalCorsPolicyName = "localhostCORS";
 
-        
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IStartupTask, InitDBStartup>();
@@ -74,18 +74,22 @@ namespace Drypoint.Core
             #endregion
 
             #region CORS
-            services.AddCors(options =>
+            var corsUrls = Configuration.GetSection("CorsUrls").Get<string[]>();
+            if (corsUrls != null && corsUrls.Length > 0)
             {
-                options.AddPolicy(LocalCorsPolicyName, policy =>
+                services.AddCors(options =>
                 {
-                    policy
-                        .WithOrigins(Configuration["CorUrls"].Split(",", StringSplitOptions.RemoveEmptyEntries).ToArray())
-                        .SetIsOriginAllowedToAllowWildcardSubdomains()
-                        .AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .AllowCredentials(); //不要和AllowAnyOrigin同时使用
+                    options.AddPolicy(LocalCorsPolicyName, policy =>
+                    {
+                        policy
+                            .WithOrigins(corsUrls)
+                            .SetIsOriginAllowedToAllowWildcardSubdomains()
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowCredentials(); //不要和AllowAnyOrigin同时使用
+                    });
                 });
-            });
+            }
             #endregion
 
             #region FreeSql
@@ -129,7 +133,11 @@ namespace Drypoint.Core
             app.UseIpRateLimiting(Configuration);
 
             //CORS
-            app.UseCors(LocalCorsPolicyName);
+            var corsUrls = Configuration.GetSection("CorsUrls").Get<string[]>();
+            if (corsUrls != null && corsUrls.Length > 0)
+            {
+                app.UseCors(LocalCorsPolicyName);
+            }
 
             //静态文件
             app.UseUploadConfig();

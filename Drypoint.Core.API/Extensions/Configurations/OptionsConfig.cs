@@ -21,7 +21,7 @@ namespace Drypoint.Core.Extensions.Configurations
         {
             services.Configure<AuthManagement>(configuration.GetSection("Authentication"));
             services.Configure<SwaggerDocConfig>(configuration.GetSection("SwaggerDoc"));
-            services.Configure<FileUploadConfig>(configuration.GetSection("FileUploadConfig"));
+            services.Configure<UploadConfig>(configuration.GetSection("FileUploadConfig"));
             services.Configure<CacheConfig>(configuration.GetSection("CacheConfig"));
             services.Configure<InitDBTaskConfig>(configuration.GetSection("InitDBTaskConfig"));
         }

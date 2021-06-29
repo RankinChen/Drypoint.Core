@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Drypoint.Model.Base
+﻿namespace Drypoint.Model.Base
 {
     /// <summary>
     /// 包含 逻辑删除属性
     /// </summary>
-    public interface ISoftDelete
+    public interface ISoftDelete : IEntityFlag
     {
         /// <summary>
         /// 逻辑删除

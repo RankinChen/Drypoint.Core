@@ -9,7 +9,7 @@ namespace Drypoint.Model.Models
     /// <summary>
     /// 角色表
     /// </summary>
-    public class Role : EntityFull<long>, IPassivable
+    public class Role : EntityFull, IPassivable
     {
         /// <summary>
         /// 角色名

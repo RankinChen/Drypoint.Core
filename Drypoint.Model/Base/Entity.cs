@@ -1,9 +1,6 @@
 ﻿using Drypoint.Unity.Attributes;
 using FreeSql.DataAnnotations;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 
 namespace Drypoint.Model.Base
 {
